@@ -11,8 +11,18 @@ config_version=5
 [application]
 
 config/name="workout-tracker"
+run/main_scene="uid://da2greqv7rspm"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=900
+window/size/viewport_height=1600
+window/size/resizable=false
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
 
 [rendering]
 
