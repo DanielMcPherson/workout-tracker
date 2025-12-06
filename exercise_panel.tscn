@@ -25,37 +25,43 @@ theme_override_constants/separation = 8
 layout_mode = 2
 text = "Biceps - Hammer Curl"
 
-[node name="LastLabel" type="Label" parent="ContentMargin/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="ContentMargin/VBoxContainer"]
 layout_mode = 2
-text = "Last: 30 lb x 11 reps"
+theme_override_constants/h_separation = 48
+columns = 2
 
-[node name="DropLabel" type="Label" parent="ContentMargin/VBoxContainer"]
+[node name="LastValueLabel" type="Label" parent="ContentMargin/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Drop set: 25 lb"
+text = "Last:"
 
-[node name="WeightHBox" type="HBoxContainer" parent="ContentMargin/VBoxContainer"]
+[node name="LastValue" type="Label" parent="ContentMargin/VBoxContainer/GridContainer"]
 layout_mode = 2
-theme_override_constants/separation = 25
+text = "30 lb x 11 reps"
 
-[node name="WeightLabel" type="Label" parent="ContentMargin/VBoxContainer/WeightHBox"]
+[node name="DropLabel" type="Label" parent="ContentMargin/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Drop set:"
+
+[node name="DropValueLabel" type="Label" parent="ContentMargin/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "25 lb"
+
+[node name="WeightLabel" type="Label" parent="ContentMargin/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Weight:"
 
-[node name="WeightInput" type="SpinBox" parent="ContentMargin/VBoxContainer/WeightHBox"]
+[node name="WeightInput" type="SpinBox" parent="ContentMargin/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 500.0
 step = 2.5
 suffix = "lbs"
 
-[node name="RepsHBox" type="HBoxContainer" parent="ContentMargin/VBoxContainer"]
-layout_mode = 2
-
-[node name="RepsLabel" type="Label" parent="ContentMargin/VBoxContainer/RepsHBox"]
+[node name="RepsLabel" type="Label" parent="ContentMargin/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Reps:"
 
-[node name="RepsInput" type="SpinBox" parent="ContentMargin/VBoxContainer/RepsHBox"]
+[node name="RepsInput" type="SpinBox" parent="ContentMargin/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 25.0
