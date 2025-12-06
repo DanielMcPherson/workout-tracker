@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://cd80csmhkm7bd"]
+
+[ext_resource type="FontFile" uid="uid://bpnwmxkgud76q" path="res://Inter_28pt-SemiBold.ttf" id="1_ybbnh"]
+
+[resource]
+default_font = ExtResource("1_ybbnh")
+default_font_size = 36

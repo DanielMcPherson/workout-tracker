@@ -1,0 +1,67 @@
+[gd_scene load_steps=2 format=3 uid="uid://daaqwgfd5o4v6"]
+
+[ext_resource type="Theme" uid="uid://cd80csmhkm7bd" path="res://app_theme.tres" id="1_xug27"]
+
+[node name="ExercisePanel" type="Control"]
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 3
+anchors_preset = 0
+offset_bottom = 220.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("1_xug27")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContentMargin" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ContentMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="Panel/ContentMargin/VBoxContainer"]
+layout_mode = 2
+text = "Biceps - Hammer Curl"
+
+[node name="LastLabel" type="Label" parent="Panel/ContentMargin/VBoxContainer"]
+layout_mode = 2
+text = "Last: 30 lb x 11 reps"
+
+[node name="DropLabel" type="Label" parent="Panel/ContentMargin/VBoxContainer"]
+layout_mode = 2
+text = "Drop set: 25 lb"
+
+[node name="InputsHBox" type="HBoxContainer" parent="Panel/ContentMargin/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="WeightLabel" type="Label" parent="Panel/ContentMargin/VBoxContainer/InputsHBox"]
+layout_mode = 2
+text = "Weight:"
+
+[node name="WeightInput" type="SpinBox" parent="Panel/ContentMargin/VBoxContainer/InputsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 500.0
+step = 2.5
+suffix = "lbs"
+
+[node name="RepsLabel" type="Label" parent="Panel/ContentMargin/VBoxContainer/InputsHBox"]
+layout_mode = 2
+text = "Reps:"
+
+[node name="RepsInput" type="SpinBox" parent="Panel/ContentMargin/VBoxContainer/InputsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 25.0
