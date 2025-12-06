@@ -11,11 +11,17 @@ extends Control
 func _ready() -> void:
 	complete_button.pressed.connect(_on_complete_button_pressed)
 	# Test setting weights
-	exercise1.set_weight(10)
-	exercise2.set_weight(20)
-	exercise3.set_weight(30)
+	exercise1.set_exercise_name("Hammer curls")
+	exercise1.set_last(30, 14)
+	exercise1.set_weight(35)
+	exercise2.set_exercise_name("Machine row")
+	exercise2.set_last(120, 9)
+	exercise2.set_weight(120)
+	exercise3.set_exercise_name("Hamstring curls")
+	exercise3.set_last(70, 10)
+	exercise3.set_weight(70)
 
 
 func _on_complete_button_pressed() -> void:
 	print("Complete Workout")
-	print(exercise1.get_weight())
+	print("%s lb × %d reps" % [exercise1.get_weight(), exercise1.get_reps()])
