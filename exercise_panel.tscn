@@ -87,9 +87,3 @@ alignment = 1
 [node name="RepsUpButton" type="Button" parent="ContentMargin/VBoxContainer/GridContainer/RepsHBox"]
 layout_mode = 2
 text = " + "
-
-[node name="ExercisePanel" type="Control" parent="."]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme = ExtResource("1_xug27")
