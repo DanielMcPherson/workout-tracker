@@ -50,21 +50,43 @@ text = "25 lb"
 layout_mode = 2
 text = "Weight:"
 
-[node name="WeightInput" type="SpinBox" parent="ContentMargin/VBoxContainer/GridContainer"]
+[node name="WeightHBox" type="HBoxContainer" parent="ContentMargin/VBoxContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-max_value = 500.0
-step = 2.5
-suffix = "lbs"
+theme_override_constants/separation = 20
+
+[node name="WeightDownButton" type="Button" parent="ContentMargin/VBoxContainer/GridContainer/WeightHBox"]
+layout_mode = 2
+text = " - "
+
+[node name="WeightLineEdit" type="LineEdit" parent="ContentMargin/VBoxContainer/GridContainer/WeightHBox"]
+layout_mode = 2
+text = "30"
+alignment = 1
+
+[node name="WeightUpButton" type="Button" parent="ContentMargin/VBoxContainer/GridContainer/WeightHBox"]
+layout_mode = 2
+text = " + "
 
 [node name="RepsLabel" type="Label" parent="ContentMargin/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Reps:"
 
-[node name="RepsInput" type="SpinBox" parent="ContentMargin/VBoxContainer/GridContainer"]
+[node name="RepsHBox" type="HBoxContainer" parent="ContentMargin/VBoxContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-max_value = 25.0
+theme_override_constants/separation = 20
+
+[node name="RepstDownButton" type="Button" parent="ContentMargin/VBoxContainer/GridContainer/RepsHBox"]
+layout_mode = 2
+text = " - "
+
+[node name="RepsLineEdit" type="LineEdit" parent="ContentMargin/VBoxContainer/GridContainer/RepsHBox"]
+layout_mode = 2
+text = "0"
+alignment = 1
+
+[node name="RepsUpButton" type="Button" parent="ContentMargin/VBoxContainer/GridContainer/RepsHBox"]
+layout_mode = 2
+text = " + "
 
 [node name="ExercisePanel" type="Control" parent="."]
 layout_mode = 2

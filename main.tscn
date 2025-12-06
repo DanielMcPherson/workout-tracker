@@ -26,34 +26,34 @@ theme_override_constants/margin_bottom = 40
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="HeaderPanel" type="PanelContainer" parent="MainMargin/MainVBox"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="MainMargin/MainVBox/HeaderPanel"]
-layout_mode = 2
-
-[node name="WorkoutTitleLabel" type="Label" parent="MainMargin/MainVBox/HeaderPanel/MarginContainer"]
-layout_mode = 2
-text = "Workout D: Biceps / Row / Hamstrings"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="TitlePanel" type="PanelContainer" parent="MainMargin/MainVBox"]
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="MainMargin/MainVBox/TitlePanel"]
 layout_mode = 2
 
-[node name="TimerVBox" type="VBoxContainer" parent="MainMargin/MainVBox/TitlePanel/MarginContainer"]
+[node name="WorkoutTitleLabel" type="Label" parent="MainMargin/MainVBox/TitlePanel/MarginContainer"]
+layout_mode = 2
+text = "Workout D: Biceps / Row / Hamstrings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TimerPanel" type="PanelContainer" parent="MainMargin/MainVBox"]
 layout_mode = 2
 
-[node name="TimerValue" type="Label" parent="MainMargin/MainVBox/TitlePanel/MarginContainer/TimerVBox"]
+[node name="MarginContainer" type="MarginContainer" parent="MainMargin/MainVBox/TimerPanel"]
+layout_mode = 2
+
+[node name="TimerVBox" type="VBoxContainer" parent="MainMargin/MainVBox/TimerPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="TimerValue" type="Label" parent="MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 82
 text = "0:00"
 horizontal_alignment = 1
 
-[node name="TimerButton" type="Button" parent="MainMargin/MainVBox/TitlePanel/MarginContainer/TimerVBox"]
+[node name="TimerButton" type="Button" parent="MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox"]
 layout_mode = 2
 text = "Start/Reset"
 
