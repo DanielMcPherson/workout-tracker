@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://daaqwgfd5o4v6"]
+[gd_scene load_steps=3 format=3 uid="uid://daaqwgfd5o4v6"]
 
 [ext_resource type="Theme" uid="uid://cd80csmhkm7bd" path="res://app_theme.tres" id="1_xug27"]
+[ext_resource type="Script" uid="uid://boq1vcv84a2jb" path="res://exercise_panel.gd" id="2_g5yf1"]
 
 [node name="Panel" type="PanelContainer"]
 anchors_preset = 15
@@ -9,6 +10,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_xug27")
+script = ExtResource("2_g5yf1")
 
 [node name="ContentMargin" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -27,7 +29,8 @@ text = "Biceps - Hammer Curl"
 
 [node name="GridContainer" type="GridContainer" parent="ContentMargin/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/h_separation = 48
+theme_override_constants/h_separation = 80
+theme_override_constants/v_separation = 8
 columns = 2
 
 [node name="LastValueLabel" type="Label" parent="ContentMargin/VBoxContainer/GridContainer"]
@@ -62,6 +65,7 @@ text = " - "
 layout_mode = 2
 text = "30"
 alignment = 1
+virtual_keyboard_type = 2
 
 [node name="WeightUpButton" type="Button" parent="ContentMargin/VBoxContainer/GridContainer/WeightHBox"]
 layout_mode = 2
@@ -75,7 +79,7 @@ text = "Reps:"
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="RepstDownButton" type="Button" parent="ContentMargin/VBoxContainer/GridContainer/RepsHBox"]
+[node name="RepsDownButton" type="Button" parent="ContentMargin/VBoxContainer/GridContainer/RepsHBox"]
 layout_mode = 2
 text = " - "
 
@@ -83,6 +87,7 @@ text = " - "
 layout_mode = 2
 text = "0"
 alignment = 1
+virtual_keyboard_type = 2
 
 [node name="RepsUpButton" type="Button" parent="ContentMargin/VBoxContainer/GridContainer/RepsHBox"]
 layout_mode = 2
