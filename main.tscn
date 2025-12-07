@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://da2greqv7rspm"]
+[gd_scene load_steps=5 format=3 uid="uid://da2greqv7rspm"]
 
 [ext_resource type="Theme" uid="uid://cd80csmhkm7bd" path="res://app_theme.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://daaqwgfd5o4v6" path="res://exercise_panel.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://bchoi1omyty71" path="res://main.gd" id="2_h2yge"]
+[ext_resource type="FontFile" uid="uid://cbrxr5c8bx2gg" path="res://IBMPlexSans-Bold.ttf" id="3_1bvp3"]
 
 [node name="main" type="Control"]
 layout_mode = 3
@@ -51,8 +52,9 @@ layout_mode = 2
 
 [node name="TimerValue" type="Label" parent="MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 82
-text = "0:00"
+theme_override_fonts/font = ExtResource("3_1bvp3")
+theme_override_font_sizes/font_size = 92
+text = "00:00.00"
 horizontal_alignment = 1
 
 [node name="TimerButton" type="Button" parent="MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox"]
