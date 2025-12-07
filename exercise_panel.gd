@@ -1,5 +1,7 @@
 extends PanelContainer
 
+signal reps_changed
+
 @export var weight_step: float = 2.5
 @export var min_weight: float = 0.0
 @export var max_weight: float = 999.9
@@ -91,6 +93,7 @@ func get_reps() -> int:
 func set_reps(value: int) -> void:
 	value = clamp(value, min_reps, max_reps)
 	reps_line_edit.text = str(value)
+	emit_signal("reps_changed")
 
 func _on_reps_down_pressed() -> void:
 	set_reps(get_reps() - reps_step)

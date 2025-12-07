@@ -31,6 +31,12 @@ func _ready() -> void:
 	timer_button.pressed.connect(_on_timer_button_pressed)
 	complete_button.pressed.connect(_on_complete_button_pressed)
 	
+	# Listen for reps changes from each exercise
+	exercise1.reps_changed.connect(_on_any_reps_changed)
+	exercise2.reps_changed.connect(_on_any_reps_changed)
+	exercise3.reps_changed.connect(_on_any_reps_changed)
+	_update_complete_button_enabled()
+	
 	# Test setting weights
 	exercise1.set_exercise_name("Hammer curls")
 	exercise1.set_last(30, 14)
@@ -60,6 +66,7 @@ func _reset_timer_display() -> void:
 	_elapsed_ms = 0
 	timer_value.text = "0:00"
 
+
 func _update_timer_label() -> void:
 	var total_ms: int = _elapsed_ms
 	var minutes: int = total_ms / 60000
@@ -68,6 +75,19 @@ func _update_timer_label() -> void:
 
 	timer_value.text = "%02d:%02d.%02d" % [minutes, seconds, hundredths]
 
+
+func _on_any_reps_changed() -> void:
+	_update_complete_button_enabled()
+
+
+func _update_complete_button_enabled() -> void:
+	complete_button.disabled = not _all_exercises_have_reps()
+
+
+func _all_exercises_have_reps() -> bool:
+	return exercise1.get_reps() > 0 \
+		and exercise2.get_reps() > 0 \
+		and exercise3.get_reps() > 0
 
 func _on_complete_button_pressed() -> void:
 	print("Complete Workout")
