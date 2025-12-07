@@ -12,6 +12,7 @@ var _elapsed_ms: int = 0
 var _tick_timer: Timer
 var _timer_running: bool = false
 
+var _complete_dialog: ConfirmationDialog
 
 func _ready() -> void:
 		# Create and configure the internal tick timer
@@ -36,6 +37,15 @@ func _ready() -> void:
 	exercise2.reps_changed.connect(_on_any_reps_changed)
 	exercise3.reps_changed.connect(_on_any_reps_changed)
 	_update_complete_button_enabled()
+	
+	# Create the confirmation dialog
+	_complete_dialog = ConfirmationDialog.new()
+	_complete_dialog.title = "Complete workout?"
+	_complete_dialog.dialog_text = "Finish workout and save these sets?"
+	add_child(_complete_dialog)
+
+	# When user taps OK in the dialog, run our completion logic
+	_complete_dialog.confirmed.connect(_on_complete_confirmed)
 	
 	# Test setting weights
 	exercise1.set_exercise_name("Hammer curls")
@@ -90,9 +100,16 @@ func _all_exercises_have_reps() -> bool:
 		and exercise3.get_reps() > 0
 
 func _on_complete_button_pressed() -> void:
+	_complete_dialog.popup_centered()
+
+
+func _on_complete_confirmed() -> void:
 	print("Complete Workout")
 	print("%s lb × %d reps" % [exercise1.get_weight(), exercise1.get_reps()])
-		# Optional: stop the timer when workout is complete
+	print("%s lb × %d reps" % [exercise2.get_weight(), exercise2.get_reps()])
+	print("%s lb × %d reps" % [exercise3.get_weight(), exercise3.get_reps()])
+
+	# Optional: stop the timer when workout is finished
 	if _timer_running:
 		_tick_timer.stop()
 		_timer_running = false
