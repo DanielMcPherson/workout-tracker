@@ -137,7 +137,10 @@ func _setup_exercise_panel(panel: Node, exercise_id: String, exercise_map: Dicti
 
 	# Pre-fill working weight with last_weight (and update drop-set label)
 	if panel.has_method("set_weight"):
-		panel.set_weight(last_weight)
+		var current_weight := last_weight
+		if last_reps > 12:
+			current_weight += 5.0
+		panel.set_weight(current_weight)
 
 
 func _save_current_workout_results() -> void:
