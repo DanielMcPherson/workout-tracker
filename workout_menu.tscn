@@ -1,0 +1,52 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvdmqntogdx7n"]
+
+[ext_resource type="Theme" uid="uid://cd80csmhkm7bd" path="res://app_theme.tres" id="1_2pagq"]
+[ext_resource type="Script" uid="uid://da4ruu15m78fj" path="res://workout_menu.gd" id="1_4bjdd"]
+
+[node name="WorkoutMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_2pagq")
+script = ExtResource("1_4bjdd")
+
+[node name="MainMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 20
+
+[node name="MainVBox" type="VBoxContainer" parent="MainMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="MainMargin/MainVBox"]
+layout_mode = 2
+text = "Workout Tracker"
+horizontal_alignment = 1
+
+[node name="SpacerLabel" type="Label" parent="MainMargin/MainVBox"]
+layout_mode = 2
+
+[node name="NextLabel" type="Label" parent="MainMargin/MainVBox"]
+layout_mode = 2
+text = "Next Workout:"
+horizontal_alignment = 1
+
+[node name="WorkoutLabel" type="Label" parent="MainMargin/MainVBox"]
+layout_mode = 2
+text = "Biceps, Chest, Abs"
+horizontal_alignment = 1
+
+[node name="SpacerLabel2" type="Label" parent="MainMargin/MainVBox"]
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="MainMargin/MainVBox"]
+layout_mode = 2
+text = "Start Workout"

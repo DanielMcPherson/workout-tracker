@@ -277,3 +277,6 @@ func _on_complete_confirmed() -> void:
 		_timer_running = false
 		
 	_save_current_workout_results()
+	
+	# Go to “Workout Completed / Next Workout” screen
+	get_tree().change_scene_to_file("res://workout_menu.tscn")
