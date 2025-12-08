@@ -140,6 +140,65 @@ func _setup_exercise_panel(panel: Node, exercise_id: String, exercise_map: Dicti
 		panel.set_weight(last_weight)
 
 
+func _save_current_workout_results() -> void:
+	if _program_config.is_empty():
+		return
+
+	var workouts: Array = _program_config.get("workouts", [])
+	var exercise_map: Dictionary = _program_config.get("exercises", {})
+	if workouts.is_empty():
+		push_error("No workouts in config")
+		return
+
+	var meta: Dictionary = _program_config.get("meta", {})
+
+	var current_index: int = int(meta.get("current_workout_index", 0))
+	if current_index < 0 or current_index >= workouts.size():
+		current_index = 0
+
+	var workout: Dictionary = workouts[current_index]
+	var exercise_ids: Array = workout.get("exercises", [])
+	if exercise_ids.size() < 3:
+		push_error("Workout has fewer than 3 exercises")
+		return
+
+	var panels: Array = [exercise1, exercise2, exercise3]
+
+	for i in range(3):
+		var ex_id: String = String(exercise_ids[i])
+		if not exercise_map.has(ex_id):
+			continue
+
+		var panel: Node = panels[i]
+		var ex_data: Dictionary = exercise_map[ex_id]
+
+		var weight: float = panel.get_weight()
+		var reps: int = panel.get_reps()
+
+		ex_data["last_weight"] = weight
+		ex_data["last_reps"] = reps
+		exercise_map[ex_id] = ex_data
+
+	_program_config["exercises"] = exercise_map
+
+	# Advance to next workout (A→B→C→D→E→A…)
+	var next_index: int = (current_index + 1) % workouts.size()
+	meta["current_workout_index"] = next_index
+	_program_config["meta"] = meta
+
+	_save_program_config_to_disk()
+
+
+func _save_program_config_to_disk() -> void:
+	var file: FileAccess = FileAccess.open(CONFIG_PATH, FileAccess.WRITE)
+	if file == null:
+		push_error("Could not open %s for write (error %d)" % [CONFIG_PATH, FileAccess.get_open_error()])
+		return
+
+	var json_text: String = JSON.stringify(_program_config, "\t")
+	file.store_string(json_text)
+
+
 
 func _on_timer_button_pressed() -> void:
 	# "Start/Reset": always reset to 0 and ensure the timer is running.
@@ -196,3 +255,5 @@ func _on_complete_confirmed() -> void:
 	if _timer_running:
 		_tick_timer.stop()
 		_timer_running = false
+		
+	_save_current_workout_results()
