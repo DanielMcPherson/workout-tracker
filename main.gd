@@ -16,8 +16,27 @@ var _timer_running: bool = false
 
 var _complete_dialog: ConfirmationDialog
 
-const CONFIG_PATH := "res://program_config.json"
+const CONFIG_SRC: String = "res://program_config.json"
+const CONFIG_DST: String = "user://program_config.json"
 var _program_config: Dictionary = {}
+
+# Copy blank default program config to user directory
+func _ensure_user_config_exists() -> void:
+	if FileAccess.file_exists(CONFIG_DST):
+		return
+	
+	var src: FileAccess = FileAccess.open(CONFIG_SRC, FileAccess.READ)
+	if src == null:
+		push_error("Could not open default config at %s" % CONFIG_SRC)
+		return
+	
+	var dst: FileAccess = FileAccess.open(CONFIG_DST, FileAccess.WRITE)
+	if dst == null:
+		push_error("Could not open user config at %s" % CONFIG_DST)
+		return
+	
+	dst.store_string(src.get_as_text())
+
 
 func _ready() -> void:
 		# Create and configure the internal tick timer
@@ -48,31 +67,31 @@ func _ready() -> void:
 	_complete_dialog.title = "Complete workout?"
 	_complete_dialog.dialog_text = "Finish workout and save these sets?"
 	add_child(_complete_dialog)
-
+	
 	# When user taps OK in the dialog, run our completion logic
 	_complete_dialog.confirmed.connect(_on_complete_confirmed)
 	
-	# Load the program config
+	# Ensure user config exists, then load it
+	_ensure_user_config_exists()
 	_load_program_config()
 
 
 func _load_program_config() -> void:
-	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
+	var file: FileAccess = FileAccess.open(CONFIG_DST, FileAccess.READ)
 	if file == null:
-		push_error("Could not open %s (error %d)" % [CONFIG_PATH, FileAccess.get_open_error()])
+		push_error("Could not open %s (error %d)" % [CONFIG_DST, FileAccess.get_open_error()])
 		return
-
-	var text := file.get_as_text()
 	
+	var text: String = file.get_as_text()
 	var data: Dictionary = JSON.parse_string(text)
 	if data.is_empty():
-		push_error("Invalid JSON: empty or failed to parse in %s" % CONFIG_PATH)
+		push_error("Invalid JSON: empty or failed to parse in %s" % CONFIG_DST)
 		return
-
+	
 	if typeof(data) != TYPE_DICTIONARY:
-		push_error("Invalid JSON format in %s" % CONFIG_PATH)
+		push_error("Invalid JSON format in %s" % CONFIG_DST)
 		return
-
+	
 	_program_config = data
 	_apply_current_workout()
 
@@ -154,7 +173,6 @@ func _save_current_workout_results() -> void:
 		return
 
 	var meta: Dictionary = _program_config.get("meta", {})
-
 	var current_index: int = int(meta.get("current_workout_index", 0))
 	if current_index < 0 or current_index >= workouts.size():
 		current_index = 0
@@ -174,7 +192,6 @@ func _save_current_workout_results() -> void:
 
 		var panel: Node = panels[i]
 		var ex_data: Dictionary = exercise_map[ex_id]
-
 		var weight: float = panel.get_weight()
 		var reps: int = panel.get_reps()
 
@@ -184,7 +201,7 @@ func _save_current_workout_results() -> void:
 
 	_program_config["exercises"] = exercise_map
 
-	# Advance to next workout (A→B→C→D→E→A…)
+	# Advance to next workout (wrap around the list)
 	var next_index: int = (current_index + 1) % workouts.size()
 	meta["current_workout_index"] = next_index
 	_program_config["meta"] = meta
@@ -193,9 +210,9 @@ func _save_current_workout_results() -> void:
 
 
 func _save_program_config_to_disk() -> void:
-	var file: FileAccess = FileAccess.open(CONFIG_PATH, FileAccess.WRITE)
+	var file: FileAccess = FileAccess.open(CONFIG_DST, FileAccess.WRITE)
 	if file == null:
-		push_error("Could not open %s for write (error %d)" % [CONFIG_PATH, FileAccess.get_open_error()])
+		push_error("Unable to save config to %s" % CONFIG_DST)
 		return
 
 	var json_text: String = JSON.stringify(_program_config, "\t")

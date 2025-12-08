@@ -6,7 +6,7 @@
   "workouts": [
     {
       "id": "A",
-      "name": "Biceps / Chest Press / Leg Press",
+      "name": "Biceps / Chest / Legs",
       "exercises": [
         "seated_db_curl",
         "chest_press_machine",
@@ -15,7 +15,7 @@
     },
     {
       "id": "B",
-      "name": "Triceps / Pulldown / Rear Delts",
+      "name": "Triceps / Back / Rear Delts",
       "exercises": [
         "triceps_pushdown_bar",
         "lat_pulldown",
@@ -24,7 +24,7 @@
     },
     {
       "id": "C",
-      "name": "Shoulder Press / Chest Fly / Weighted Crunch",
+      "name": "Shoulders / Chest / Abs",
       "exercises": [
         "shoulder_press_bar",
         "chest_fly_machine",
@@ -33,7 +33,7 @@
     },
     {
       "id": "D",
-      "name": "Biceps / Row / Leg Curl",
+      "name": "Biceps / Back / Legs",
       "exercises": [
         "hammer_curl_db",
         "row_machine",
@@ -42,7 +42,7 @@
     },
     {
       "id": "E",
-      "name": "Triceps / Laterals / Cable Woodchoppers",
+      "name": "Triceps / Shoulders / Abs",
       "exercises": [
         "oh_cable_extension",
         "db_lateral_raise",
@@ -85,12 +85,12 @@
     },
 
     "shoulder_press_bar": {
-      "name": "Shoulder Press (Bar / Fixed Bar Machine)",
+      "name": "Shoulder Press",
       "last_weight": null,
       "last_reps": null
     },
     "chest_fly_machine": {
-      "name": "Chest Fly Machine (Pec Deck Fly)",
+      "name": "Chest Fly Machine",
       "last_weight": null,
       "last_reps": null
     },
