@@ -2,7 +2,7 @@ extends PanelContainer
 
 signal reps_changed
 
-@export var weight_step: float = 2.5
+@export var weight_step: float = 5.0
 @export var min_weight: float = 0.0
 @export var max_weight: float = 999.9
 @export var drop_set_factor: float = 0.80	# 80% of working weight
@@ -37,6 +37,7 @@ func _ready() -> void:
 
 func set_exercise_name(exercise_name: String) -> void:
 	title_label.text = exercise_name
+
 
 func set_last(weight: float, reps: int) -> void:
 	# Example format: "30 lb × 11 reps"

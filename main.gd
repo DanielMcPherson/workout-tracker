@@ -1,5 +1,7 @@
 extends Control
 
+@onready var workout_title_label: Label = $MainMargin/MainVBox/TitlePanel/MarginContainer/WorkoutTitleLabel
+
 @onready var exercise1: PanelContainer = $MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel1
 @onready var exercise2: PanelContainer = $MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel2
 @onready var exercise3: PanelContainer = $MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel3
@@ -13,6 +15,9 @@ var _tick_timer: Timer
 var _timer_running: bool = false
 
 var _complete_dialog: ConfirmationDialog
+
+const CONFIG_PATH := "res://program_config.json"
+var _program_config: Dictionary = {}
 
 func _ready() -> void:
 		# Create and configure the internal tick timer
@@ -47,16 +52,94 @@ func _ready() -> void:
 	# When user taps OK in the dialog, run our completion logic
 	_complete_dialog.confirmed.connect(_on_complete_confirmed)
 	
-	# Test setting weights
-	exercise1.set_exercise_name("Hammer curls")
-	exercise1.set_last(30, 14)
-	exercise1.set_weight(35)
-	exercise2.set_exercise_name("Machine row")
-	exercise2.set_last(120, 9)
-	exercise2.set_weight(120)
-	exercise3.set_exercise_name("Hamstring curls")
-	exercise3.set_last(70, 10)
-	exercise3.set_weight(70)
+	# Load the program config
+	_load_program_config()
+
+
+func _load_program_config() -> void:
+	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		push_error("Could not open %s (error %d)" % [CONFIG_PATH, FileAccess.get_open_error()])
+		return
+
+	var text := file.get_as_text()
+	
+	var data: Dictionary = JSON.parse_string(text)
+	if data.is_empty():
+		push_error("Invalid JSON: empty or failed to parse in %s" % CONFIG_PATH)
+		return
+
+	if typeof(data) != TYPE_DICTIONARY:
+		push_error("Invalid JSON format in %s" % CONFIG_PATH)
+		return
+
+	_program_config = data
+	_apply_current_workout()
+
+
+func _apply_current_workout() -> void:
+	if _program_config.is_empty():
+		return
+
+	var meta: Dictionary = _program_config.get("meta", {})
+	var workouts: Array = _program_config.get("workouts", [])
+	if workouts.is_empty():
+		push_error("No workouts defined in program_config.json")
+		return
+
+	var current_index: int = int(meta.get("current_workout_index", 0))
+	current_index = clamp(current_index, 0, workouts.size() - 1)
+
+	var workout: Dictionary = workouts[current_index]
+	
+	var workout_name: String = workout.get("name")
+	workout_title_label.text = workout_name
+	
+	var exercise_ids: Array = workout.get("exercises", [])
+	if exercise_ids.size() < 3:
+		push_error("Workout %s does not have 3 exercises" % str(workout.get("id", "?")))
+		return
+
+	var exercise_map: Dictionary = _program_config.get("exercises", {})
+
+	_setup_exercise_panel(exercise1, exercise_ids[0], exercise_map)
+	_setup_exercise_panel(exercise2, exercise_ids[1], exercise_map)
+	_setup_exercise_panel(exercise3, exercise_ids[2], exercise_map)
+
+
+func _setup_exercise_panel(panel: Node, exercise_id: String, exercise_map: Dictionary) -> void:
+	if not exercise_map.has(exercise_id):
+		push_error("Exercise id '%s' not found in config" % exercise_id)
+		return
+
+	var data: Dictionary = exercise_map[exercise_id]
+	var exercise_name: String = data.get("name", exercise_id)
+
+	var last_weight_raw = data.get("last_weight", null)
+	var last_reps_raw = data.get("last_reps", null)
+
+	# Treat null as "no previous data" → 0 for now
+	var last_weight: float = 0.0
+	var last_reps: int = 0
+
+	if last_weight_raw != null:
+		last_weight = float(last_weight_raw)
+	if last_reps_raw != null:
+		last_reps = int(last_reps_raw)
+
+	# Set exercise name
+	if panel.has_method("set_exercise_name"):
+		panel.set_exercise_name(exercise_name)
+
+	# Show "Last: X lb × Y reps" (or whatever your panel does)
+	if panel.has_method("set_last"):
+		panel.set_last(last_weight, last_reps)
+
+	# Pre-fill working weight with last_weight (and update drop-set label)
+	if panel.has_method("set_weight"):
+		panel.set_weight(last_weight)
+
+
 
 func _on_timer_button_pressed() -> void:
 	# "Start/Reset": always reset to 0 and ensure the timer is running.

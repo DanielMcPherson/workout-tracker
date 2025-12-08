@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "current_workout_index": 0
+  },
+
+  "workouts": [
+    {
+      "id": "A",
+      "name": "Biceps / Chest Press / Leg Press",
+      "exercises": [
+        "seated_db_curl",
+        "chest_press_machine",
+        "leg_press"
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Triceps / Pulldown / Rear Delts",
+      "exercises": [
+        "triceps_pushdown_bar",
+        "lat_pulldown",
+        "reverse_pec_deck"
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Shoulder Press / Chest Fly / Weighted Crunch",
+      "exercises": [
+        "shoulder_press_bar",
+        "chest_fly_machine",
+        "weighted_crunch_machine"
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Biceps / Row / Leg Curl",
+      "exercises": [
+        "hammer_curl_db",
+        "row_machine",
+        "leg_curl_machine"
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Triceps / Laterals / Cable Woodchoppers",
+      "exercises": [
+        "oh_cable_extension",
+        "db_lateral_raise",
+        "cable_woodchopper"
+      ]
+    }
+  ],
+
+  "exercises": {
+    "seated_db_curl": {
+      "name": "Seated DB Curl",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "chest_press_machine": {
+      "name": "Chest Press Machine",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "leg_press": {
+      "name": "Leg Press",
+      "last_weight": null,
+      "last_reps": null
+    },
+
+    "triceps_pushdown_bar": {
+      "name": "Straight Bar Pushdown",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "lat_pulldown": {
+      "name": "Lat Pulldown",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "reverse_pec_deck": {
+      "name": "Reverse Pec Deck",
+      "last_weight": null,
+      "last_reps": null
+    },
+
+    "shoulder_press_bar": {
+      "name": "Shoulder Press (Bar / Fixed Bar Machine)",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "chest_fly_machine": {
+      "name": "Chest Fly Machine (Pec Deck Fly)",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "weighted_crunch_machine": {
+      "name": "Weighted Crunch Machine",
+      "last_weight": null,
+      "last_reps": null
+    },
+
+    "hammer_curl_db": {
+      "name": "DB Hammer Curl",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "row_machine": {
+      "name": "Row Machine",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "leg_curl_machine": {
+      "name": "Leg Curl Machine",
+      "last_weight": null,
+      "last_reps": null
+    },
+
+    "oh_cable_extension": {
+      "name": "Overhead Cable Extension",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "db_lateral_raise": {
+      "name": "DB Lateral Raise",
+      "last_weight": null,
+      "last_reps": null
+    },
+    "cable_woodchopper": {
+      "name": "Cable Woodchoppers",
+      "last_weight": null,
+      "last_reps": null
+    }
+  }
+}
