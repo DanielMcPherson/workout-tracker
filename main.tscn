@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://da2greqv7rspm"]
+[gd_scene load_steps=6 format=3 uid="uid://da2greqv7rspm"]
 
 [ext_resource type="Theme" uid="uid://cd80csmhkm7bd" path="res://app_theme.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://daaqwgfd5o4v6" path="res://exercise_panel.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://bchoi1omyty71" path="res://main.gd" id="2_h2yge"]
 [ext_resource type="FontFile" uid="uid://cbrxr5c8bx2gg" path="res://IBMPlexSans-Bold.ttf" id="3_1bvp3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1bvp3"]
+bg_color = Color(0.09411765, 0.09411765, 0.09411765, 1)
 
 [node name="main" type="Control"]
 layout_mode = 3
@@ -15,7 +18,15 @@ grow_vertical = 2
 theme = ExtResource("1_0xm2m")
 script = ExtResource("2_h2yge")
 
-[node name="MainMargin" type="MarginContainer" parent="."]
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainMargin" type="MarginContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,68 +36,69 @@ grow_vertical = 2
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="MainVBox" type="VBoxContainer" parent="MainMargin"]
+[node name="MainVBox" type="VBoxContainer" parent="Panel/MainMargin"]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="TitlePanel" type="PanelContainer" parent="MainMargin/MainVBox"]
+[node name="TitlePanel" type="PanelContainer" parent="Panel/MainMargin/MainVBox"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MainMargin/MainVBox/TitlePanel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MainMargin/MainVBox/TitlePanel"]
 layout_mode = 2
 
-[node name="WorkoutTitleLabel" type="Label" parent="MainMargin/MainVBox/TitlePanel/MarginContainer"]
+[node name="WorkoutTitleLabel" type="Label" parent="Panel/MainMargin/MainVBox/TitlePanel/MarginContainer"]
 layout_mode = 2
 text = "Workout D: Biceps / Row / Hamstrings"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TimerPanel" type="PanelContainer" parent="MainMargin/MainVBox"]
+[node name="TimerPanel" type="PanelContainer" parent="Panel/MainMargin/MainVBox"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MainMargin/MainVBox/TimerPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MainMargin/MainVBox/TimerPanel"]
 layout_mode = 2
 
-[node name="TimerVBox" type="VBoxContainer" parent="MainMargin/MainVBox/TimerPanel/MarginContainer"]
+[node name="TimerVBox" type="VBoxContainer" parent="Panel/MainMargin/MainVBox/TimerPanel/MarginContainer"]
 layout_mode = 2
 
-[node name="TimerValue" type="Label" parent="MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox"]
+[node name="TimerValue" type="Label" parent="Panel/MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1bvp3")
 theme_override_font_sizes/font_size = 92
 text = "00:00.00"
 horizontal_alignment = 1
 
-[node name="TimerButton" type="Button" parent="MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox"]
+[node name="TimerButton" type="Button" parent="Panel/MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox"]
 layout_mode = 2
 text = "Start/Reset"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MainMargin/MainVBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MainMargin/MainVBox"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_1bvp3")
 
-[node name="ExerciseVBox" type="VBoxContainer" parent="MainMargin/MainVBox/ScrollContainer"]
+[node name="ExerciseVBox" type="VBoxContainer" parent="Panel/MainMargin/MainVBox/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 24
 
-[node name="ExercisePanel1" parent="MainMargin/MainVBox/ScrollContainer/ExerciseVBox" instance=ExtResource("1_ig7tw")]
+[node name="ExercisePanel1" parent="Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox" instance=ExtResource("1_ig7tw")]
 layout_mode = 2
 
-[node name="ExercisePanel2" parent="MainMargin/MainVBox/ScrollContainer/ExerciseVBox" instance=ExtResource("1_ig7tw")]
+[node name="ExercisePanel2" parent="Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox" instance=ExtResource("1_ig7tw")]
 layout_mode = 2
 
-[node name="ExercisePanel3" parent="MainMargin/MainVBox/ScrollContainer/ExerciseVBox" instance=ExtResource("1_ig7tw")]
+[node name="ExercisePanel3" parent="Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox" instance=ExtResource("1_ig7tw")]
 layout_mode = 2
 
-[node name="FooterPanel" type="PanelContainer" parent="MainMargin/MainVBox"]
+[node name="FooterPanel" type="PanelContainer" parent="Panel/MainMargin/MainVBox"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MainMargin/MainVBox/FooterPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MainMargin/MainVBox/FooterPanel"]
 layout_mode = 2
 
-[node name="CompleteButton" type="Button" parent="MainMargin/MainVBox/FooterPanel/MarginContainer"]
+[node name="CompleteButton" type="Button" parent="Panel/MainMargin/MainVBox/FooterPanel/MarginContainer"]
 layout_mode = 2
 text = "COMPLETE WORKOUT
 "

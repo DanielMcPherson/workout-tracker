@@ -1,14 +1,14 @@
 extends Control
 
-@onready var workout_title_label: Label = $MainMargin/MainVBox/TitlePanel/MarginContainer/WorkoutTitleLabel
+@onready var workout_title_label: Label = $Panel/MainMargin/MainVBox/TitlePanel/MarginContainer/WorkoutTitleLabel
 
-@onready var exercise1: PanelContainer = $MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel1
-@onready var exercise2: PanelContainer = $MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel2
-@onready var exercise3: PanelContainer = $MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel3
+@onready var exercise1: PanelContainer = $Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel1
+@onready var exercise2: PanelContainer = $Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel2
+@onready var exercise3: PanelContainer = $Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel3
 
-@onready var timer_button: Button = $MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox/TimerButton
-@onready var complete_button: Button = $MainMargin/MainVBox/FooterPanel/MarginContainer/CompleteButton
-@onready var timer_value: Label = $MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox/TimerValue
+@onready var timer_button: Button = $Panel/MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox/TimerButton
+@onready var complete_button: Button = $Panel/MainMargin/MainVBox/FooterPanel/MarginContainer/CompleteButton
+@onready var timer_value: Label = $Panel/MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox/TimerValue
 
 var _elapsed_ms: int = 0
 var _tick_timer: Timer
