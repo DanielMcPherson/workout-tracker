@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://da2greqv7rspm"]
+[gd_scene load_steps=10 format=3 uid="uid://da2greqv7rspm"]
 
 [ext_resource type="Theme" uid="uid://cd80csmhkm7bd" path="res://app_theme.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://daaqwgfd5o4v6" path="res://exercise_panel.tscn" id="1_ig7tw"]
@@ -7,6 +7,20 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1bvp3"]
 bg_color = Color(0.09411765, 0.09411765, 0.09411765, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lquwl"]
+bg_color = Color(0.9843137, 0.44705883, 0.18039216, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7mycd"]
+bg_color = Color(0.9843137, 0.26666668, 0.18039216, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_272bh"]
+bg_color = Color(0.9843137, 0.37254903, 0.18039216, 1)
+
+[sub_resource type="Theme" id="Theme_5vw27"]
+Button/styles/hover = SubResource("StyleBoxFlat_lquwl")
+Button/styles/normal = SubResource("StyleBoxFlat_7mycd")
+Button/styles/pressed = SubResource("StyleBoxFlat_272bh")
 
 [node name="main" type="Control"]
 layout_mode = 3
@@ -98,7 +112,16 @@ layout_mode = 2
 [node name="MarginContainer" type="MarginContainer" parent="Panel/MainMargin/MainVBox/FooterPanel"]
 layout_mode = 2
 
-[node name="CompleteButton" type="Button" parent="Panel/MainMargin/MainVBox/FooterPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MainMargin/MainVBox/FooterPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="CompleteButton" type="Button" parent="Panel/MainMargin/MainVBox/FooterPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "COMPLETE WORKOUT
 "
+
+[node name="CancelButton" type="Button" parent="Panel/MainMargin/MainVBox/FooterPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_5vw27")
+text = "Cancel"

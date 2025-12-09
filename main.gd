@@ -7,7 +7,8 @@ extends Control
 @onready var exercise3: PanelContainer = $Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel3
 
 @onready var timer_button: Button = $Panel/MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox/TimerButton
-@onready var complete_button: Button = $Panel/MainMargin/MainVBox/FooterPanel/MarginContainer/CompleteButton
+@onready var complete_button: Button = $Panel/MainMargin/MainVBox/FooterPanel/MarginContainer/VBoxContainer/CompleteButton
+@onready var cancel_button: Button = $Panel/MainMargin/MainVBox/FooterPanel/MarginContainer/VBoxContainer/CancelButton
 @onready var timer_value: Label = $Panel/MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox/TimerValue
 
 var _elapsed_ms: int = 0
@@ -15,6 +16,7 @@ var _tick_timer: Timer
 var _timer_running: bool = false
 
 var _complete_dialog: ConfirmationDialog
+var _cancel_dialog: ConfirmationDialog
 
 const CONFIG_SRC: String = "res://program_config.json"
 const CONFIG_DST: String = "user://program_config.json"
@@ -55,6 +57,7 @@ func _ready() -> void:
 	# Connect buttons
 	timer_button.pressed.connect(_on_timer_button_pressed)
 	complete_button.pressed.connect(_on_complete_button_pressed)
+	cancel_button.pressed.connect(_on_cancel_button_pressed)
 	
 	# Listen for reps changes from each exercise
 	exercise1.reps_changed.connect(_on_any_reps_changed)
@@ -67,9 +70,14 @@ func _ready() -> void:
 	_complete_dialog.title = "Complete workout?"
 	_complete_dialog.dialog_text = "Finish workout and save these sets?"
 	add_child(_complete_dialog)
-	
 	# When user taps OK in the dialog, run our completion logic
 	_complete_dialog.confirmed.connect(_on_complete_confirmed)
+	# Create the cancel dialog
+	_cancel_dialog = ConfirmationDialog.new()
+	_cancel_dialog.title = "Cancel workout?"
+	_cancel_dialog.dialog_text = "Abandon workout without saving sets?"
+	add_child(_cancel_dialog)
+	_cancel_dialog.confirmed.connect(_on_cancel_confirmed)
 	
 	# Ensure user config exists, then load it
 	_ensure_user_config_exists()
@@ -261,8 +269,13 @@ func _all_exercises_have_reps() -> bool:
 		and exercise2.get_reps() > 0 \
 		and exercise3.get_reps() > 0
 
+
 func _on_complete_button_pressed() -> void:
 	_complete_dialog.popup_centered()
+
+
+func _on_cancel_button_pressed() -> void:
+	_cancel_dialog.popup_centered()
 
 
 func _on_complete_confirmed() -> void:
@@ -279,4 +292,9 @@ func _on_complete_confirmed() -> void:
 	_save_current_workout_results()
 	
 	# Go to “Workout Completed / Next Workout” screen
+	get_tree().change_scene_to_file("res://workout_menu.tscn")
+
+
+func _on_cancel_confirmed() -> void:
+	print("Canceling workout")
 	get_tree().change_scene_to_file("res://workout_menu.tscn")
