@@ -11,24 +11,28 @@ func _ready() -> void:
 
 
 func _update_labels() -> void:
-	var cfg: Dictionary = ConfigStore.get_program_config()
-	var workouts: Array = cfg.get("workouts", [])
-	if workouts.is_empty():
-		title_label.text = "Workout Tracker"
-		workout_label.text = "No workouts configured"
-		return
+	var idx := ConfigStore.get_current_workout_index()
+	var letter := String.chr(ord("A") + idx)
+	workout_label.text = "%s: %s" % [letter, ConfigStore.get_current_workout_name()]
 	
-	var current_index: int = ConfigStore.get_current_workout_index()
-	var workout: Dictionary = workouts[current_index]
-	
-	var letter := String.chr(ord("A") + current_index)
-	var workout_name: String = "%s: %s" % [
-		letter,
-		workout.get("name", "Workout %d" % current_index)
-	]
+	#var cfg: Dictionary = ConfigStore.get_program_config()
+	#var workouts: Array = cfg.get("workouts", [])
+	#if workouts.is_empty():
+		#title_label.text = "Workout Tracker"
+		#workout_label.text = "No workouts configured"
+		#return
+	#
+	#var current_index: int = ConfigStore.get_current_workout_index()
+	#var workout: Dictionary = workouts[current_index]
+	#
+	#var letter := String.chr(ord("A") + current_index)
+	#var workout_name: String = "%s: %s" % [
+		#letter,
+		#workout.get("name", "Workout %d" % current_index)
+	#]
 	
 	title_label.text = "Workout Tracker"
-	workout_label.text = workout_name
+	#workout_label.text = workout_name
 
 
 func _on_start_button_pressed() -> void:

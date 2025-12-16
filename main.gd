@@ -64,63 +64,34 @@ func _ready() -> void:
 
 
 func _apply_current_workout() -> void:
-	var _program_config: Dictionary = ConfigStore.get_program_config()
-	
-	var meta: Dictionary = _program_config.get("meta", {})
-	var workouts: Array = _program_config.get("workouts", [])
-	if workouts.is_empty():
-		push_error("No workouts defined in program_config.json")
-		return
-	
-	var current_index: int = int(meta.get("current_workout_index", 0))
-	current_index = clamp(current_index, 0, workouts.size() - 1)
-	
-	var workout: Dictionary = workouts[current_index]
-	
-	var workout_name: String = workout.get("name")
+	# Program-only workout name comes from ConfigStore now
+	var workout_name: String = ConfigStore.get_current_workout_name()
 	workout_title_label.text = workout_name
 	
-	var exercise_ids: Array = workout.get("exercises", [])
+	var exercise_ids: Array = ConfigStore.get_current_workout_exercise_ids()
 	if exercise_ids.size() < 3:
-		push_error("Workout %s does not have 3 exercises" % str(workout.get("id", "?")))
+		push_error("Current workout does not have 3 exercises")
 		return
 	
-	var exercise_map: Dictionary = _program_config.get("exercises", {})
-	
-	_setup_exercise_panel(exercise1, exercise_ids[0], exercise_map)
-	_setup_exercise_panel(exercise2, exercise_ids[1], exercise_map)
-	_setup_exercise_panel(exercise3, exercise_ids[2], exercise_map)
+	_setup_exercise_panel(exercise1, String(exercise_ids[0]))
+	_setup_exercise_panel(exercise2, String(exercise_ids[1]))
+	_setup_exercise_panel(exercise3, String(exercise_ids[2]))
 
 
-func _setup_exercise_panel(panel: Node, exercise_id: String, exercise_map: Dictionary) -> void:
-	if not exercise_map.has(exercise_id):
-		push_error("Exercise id '%s' not found in config" % exercise_id)
-		return
-	
-	var data: Dictionary = exercise_map[exercise_id]
-	var exercise_name: String = data.get("name", exercise_id)
-	
-	var last_weight_raw = data.get("last_weight", null)
-	var last_reps_raw = data.get("last_reps", null)
-	
-	# Treat null as "no previous data" → 0 for now
-	var last_weight: float = 0.0
-	var last_reps: int = 0
-	
-	if last_weight_raw != null:
-		last_weight = float(last_weight_raw)
-	if last_reps_raw != null:
-		last_reps = int(last_reps_raw)
+func _setup_exercise_panel(panel: Node, exercise_id: String) -> void:
+	var exercise_name: String = ConfigStore.get_exercise_name(exercise_id)
+	var last_weight: float = ConfigStore.get_last_weight(exercise_id, 0.0)
+	var last_reps: int = ConfigStore.get_last_reps(exercise_id, 0)
 	
 	# Set exercise name
 	if panel.has_method("set_exercise_name"):
 		panel.set_exercise_name(exercise_name)
 	
-	# Show "Last: X lb × Y reps" (or whatever your panel does)
+	# Show "Last: X lb × Y reps"
 	if panel.has_method("set_last"):
 		panel.set_last(last_weight, last_reps)
 	
-	# Pre-fill working weight with last_weight (and update drop-set label)
+	# Pre-fill working weight with last_weight (and apply your >12 rule)
 	if panel.has_method("set_weight"):
 		var current_weight := last_weight
 		if last_reps > 12:
@@ -128,38 +99,23 @@ func _setup_exercise_panel(panel: Node, exercise_id: String, exercise_map: Dicti
 		panel.set_weight(current_weight)
 
 
+
 func _save_current_workout_results() -> void:
-	var cfg: Dictionary = ConfigStore.get_program_config()
-	if cfg.is_empty():
-		return
-	
-	var workouts: Array = cfg.get("workouts", [])
-	if workouts.is_empty():
-		push_error("No workouts in config")
-		return
-	
-	var meta: Dictionary = cfg.get("meta", {})
-	var current_index: int = int(meta.get("current_workout_index", 0))
-	current_index = clamp(current_index, 0, workouts.size() - 1)
-	
-	var workout: Dictionary = workouts[current_index]
-	var exercise_ids: Array = workout.get("exercises", [])
+	var exercise_ids: Array = ConfigStore.get_current_workout_exercise_ids()
 	if exercise_ids.size() < 3:
 		push_error("Workout has fewer than 3 exercises")
 		return
 	
-	var panels: Array = [exercise1, exercise2, exercise3]
-	var updates: Dictionary = {}
+	var ex_id_1: String = String(exercise_ids[0])
+	var ex_id_2: String = String(exercise_ids[1])
+	var ex_id_3: String = String(exercise_ids[2])
 	
-	for i in range(3):
-		var ex_id: String = String(exercise_ids[i])
-		var panel: Node = panels[i]
-		updates[ex_id] = {
-			"weight": float(panel.get_weight()),
-			"reps": int(panel.get_reps()),
-		}
+	ConfigStore.set_last_set(ex_id_1, float(exercise1.get_weight()), int(exercise1.get_reps()))
+	ConfigStore.set_last_set(ex_id_2, float(exercise2.get_weight()), int(exercise2.get_reps()))
+	ConfigStore.set_last_set(ex_id_3, float(exercise3.get_weight()), int(exercise3.get_reps()))
 	
-	ConfigStore.commit_current_workout_results(updates)
+	ConfigStore.advance_to_next_workout()
+	ConfigStore.save_progress()
 
 
 func _on_timer_button_pressed() -> void:
