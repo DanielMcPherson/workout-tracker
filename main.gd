@@ -18,27 +18,6 @@ var _timer_running: bool = false
 var _complete_dialog: ConfirmationDialog
 var _cancel_dialog: ConfirmationDialog
 
-const CONFIG_SRC: String = "res://program_config.json"
-const CONFIG_DST: String = "user://program_config.json"
-var _program_config: Dictionary = {}
-
-# Copy blank default program config to user directory
-func _ensure_user_config_exists() -> void:
-	if FileAccess.file_exists(CONFIG_DST):
-		return
-	
-	var src: FileAccess = FileAccess.open(CONFIG_SRC, FileAccess.READ)
-	if src == null:
-		push_error("Could not open default config at %s" % CONFIG_SRC)
-		return
-	
-	var dst: FileAccess = FileAccess.open(CONFIG_DST, FileAccess.WRITE)
-	if dst == null:
-		push_error("Could not open user config at %s" % CONFIG_DST)
-		return
-	
-	dst.store_string(src.get_as_text())
-
 
 func _ready() -> void:
 		# Create and configure the internal tick timer
@@ -79,44 +58,23 @@ func _ready() -> void:
 	add_child(_cancel_dialog)
 	_cancel_dialog.confirmed.connect(_on_cancel_confirmed)
 	
-	# Ensure user config exists, then load it
-	_ensure_user_config_exists()
-	_load_program_config()
-
-
-func _load_program_config() -> void:
-	var file: FileAccess = FileAccess.open(CONFIG_DST, FileAccess.READ)
-	if file == null:
-		push_error("Could not open %s (error %d)" % [CONFIG_DST, FileAccess.get_open_error()])
-		return
-	
-	var text: String = file.get_as_text()
-	var data: Dictionary = JSON.parse_string(text)
-	if data.is_empty():
-		push_error("Invalid JSON: empty or failed to parse in %s" % CONFIG_DST)
-		return
-	
-	if typeof(data) != TYPE_DICTIONARY:
-		push_error("Invalid JSON format in %s" % CONFIG_DST)
-		return
-	
-	_program_config = data
+	# Load workout config
+	ConfigStore.ensure_loaded()
 	_apply_current_workout()
 
 
 func _apply_current_workout() -> void:
-	if _program_config.is_empty():
-		return
-
+	var _program_config: Dictionary = ConfigStore.get_program_config()
+	
 	var meta: Dictionary = _program_config.get("meta", {})
 	var workouts: Array = _program_config.get("workouts", [])
 	if workouts.is_empty():
 		push_error("No workouts defined in program_config.json")
 		return
-
+	
 	var current_index: int = int(meta.get("current_workout_index", 0))
 	current_index = clamp(current_index, 0, workouts.size() - 1)
-
+	
 	var workout: Dictionary = workouts[current_index]
 	
 	var workout_name: String = workout.get("name")
@@ -126,9 +84,9 @@ func _apply_current_workout() -> void:
 	if exercise_ids.size() < 3:
 		push_error("Workout %s does not have 3 exercises" % str(workout.get("id", "?")))
 		return
-
+	
 	var exercise_map: Dictionary = _program_config.get("exercises", {})
-
+	
 	_setup_exercise_panel(exercise1, exercise_ids[0], exercise_map)
 	_setup_exercise_panel(exercise2, exercise_ids[1], exercise_map)
 	_setup_exercise_panel(exercise3, exercise_ids[2], exercise_map)
@@ -138,30 +96,30 @@ func _setup_exercise_panel(panel: Node, exercise_id: String, exercise_map: Dicti
 	if not exercise_map.has(exercise_id):
 		push_error("Exercise id '%s' not found in config" % exercise_id)
 		return
-
+	
 	var data: Dictionary = exercise_map[exercise_id]
 	var exercise_name: String = data.get("name", exercise_id)
-
+	
 	var last_weight_raw = data.get("last_weight", null)
 	var last_reps_raw = data.get("last_reps", null)
-
+	
 	# Treat null as "no previous data" → 0 for now
 	var last_weight: float = 0.0
 	var last_reps: int = 0
-
+	
 	if last_weight_raw != null:
 		last_weight = float(last_weight_raw)
 	if last_reps_raw != null:
 		last_reps = int(last_reps_raw)
-
+	
 	# Set exercise name
 	if panel.has_method("set_exercise_name"):
 		panel.set_exercise_name(exercise_name)
-
+	
 	# Show "Last: X lb × Y reps" (or whatever your panel does)
 	if panel.has_method("set_last"):
 		panel.set_last(last_weight, last_reps)
-
+	
 	# Pre-fill working weight with last_weight (and update drop-set label)
 	if panel.has_method("set_weight"):
 		var current_weight := last_weight
@@ -171,61 +129,37 @@ func _setup_exercise_panel(panel: Node, exercise_id: String, exercise_map: Dicti
 
 
 func _save_current_workout_results() -> void:
-	if _program_config.is_empty():
+	var cfg: Dictionary = ConfigStore.get_program_config()
+	if cfg.is_empty():
 		return
-
-	var workouts: Array = _program_config.get("workouts", [])
-	var exercise_map: Dictionary = _program_config.get("exercises", {})
+	
+	var workouts: Array = cfg.get("workouts", [])
 	if workouts.is_empty():
 		push_error("No workouts in config")
 		return
-
-	var meta: Dictionary = _program_config.get("meta", {})
+	
+	var meta: Dictionary = cfg.get("meta", {})
 	var current_index: int = int(meta.get("current_workout_index", 0))
-	if current_index < 0 or current_index >= workouts.size():
-		current_index = 0
-
+	current_index = clamp(current_index, 0, workouts.size() - 1)
+	
 	var workout: Dictionary = workouts[current_index]
 	var exercise_ids: Array = workout.get("exercises", [])
 	if exercise_ids.size() < 3:
 		push_error("Workout has fewer than 3 exercises")
 		return
-
+	
 	var panels: Array = [exercise1, exercise2, exercise3]
-
+	var updates: Dictionary = {}
+	
 	for i in range(3):
 		var ex_id: String = String(exercise_ids[i])
-		if not exercise_map.has(ex_id):
-			continue
-
 		var panel: Node = panels[i]
-		var ex_data: Dictionary = exercise_map[ex_id]
-		var weight: float = panel.get_weight()
-		var reps: int = panel.get_reps()
-
-		ex_data["last_weight"] = weight
-		ex_data["last_reps"] = reps
-		exercise_map[ex_id] = ex_data
-
-	_program_config["exercises"] = exercise_map
-
-	# Advance to next workout (wrap around the list)
-	var next_index: int = (current_index + 1) % workouts.size()
-	meta["current_workout_index"] = next_index
-	_program_config["meta"] = meta
-
-	_save_program_config_to_disk()
-
-
-func _save_program_config_to_disk() -> void:
-	var file: FileAccess = FileAccess.open(CONFIG_DST, FileAccess.WRITE)
-	if file == null:
-		push_error("Unable to save config to %s" % CONFIG_DST)
-		return
-
-	var json_text: String = JSON.stringify(_program_config, "\t")
-	file.store_string(json_text)
-
+		updates[ex_id] = {
+			"weight": float(panel.get_weight()),
+			"reps": int(panel.get_reps()),
+		}
+	
+	ConfigStore.commit_current_workout_results(updates)
 
 
 func _on_timer_button_pressed() -> void:
