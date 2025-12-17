@@ -6,7 +6,7 @@
     {
       "id": "A",
       "name": "Biceps / Chest / Legs",
-      "exercises": ["seated_db_curl", "chest_press_machine", "leg_press"]
+	"exercises": ["seated_db_curl", "chest_press_machine", "leg_press", "romanian_deadlift"]
     },
     {
       "id": "B",
@@ -49,6 +49,8 @@
 
     "oh_cable_extension": { "name": "Overhead Cable Extension" },
     "db_lateral_raise": { "name": "DB Lateral Raise" },
-    "cable_woodchopper": { "name": "Cable Woodchoppers" }
+    "cable_woodchopper": { "name": "Cable Woodchoppers" },
+
+    "romanian_deadlift": { "name": "Romanian Deadlift" }
   }
 }

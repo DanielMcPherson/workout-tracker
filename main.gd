@@ -2,9 +2,9 @@ extends Control
 
 @onready var workout_title_label: Label = $Panel/MainMargin/MainVBox/TitlePanel/MarginContainer/WorkoutTitleLabel
 
-@onready var exercise1: PanelContainer = $Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel1
-@onready var exercise2: PanelContainer = $Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel2
-@onready var exercise3: PanelContainer = $Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox/ExercisePanel3
+@onready var exercises_container: VBoxContainer = $Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox
+var _exercise_panels: Array[ExercisePanel] = []
+var _bound_exercise_ids: Array[String] = []
 
 @onready var timer_button: Button = $Panel/MainMargin/MainVBox/TimerPanel/MarginContainer/TimerVBox/TimerButton
 @onready var complete_button: Button = $Panel/MainMargin/MainVBox/FooterPanel/MarginContainer/VBoxContainer/CompleteButton
@@ -37,13 +37,7 @@ func _ready() -> void:
 	timer_button.pressed.connect(_on_timer_button_pressed)
 	complete_button.pressed.connect(_on_complete_button_pressed)
 	cancel_button.pressed.connect(_on_cancel_button_pressed)
-	
-	# Listen for reps changes from each exercise
-	exercise1.reps_changed.connect(_on_any_reps_changed)
-	exercise2.reps_changed.connect(_on_any_reps_changed)
-	exercise3.reps_changed.connect(_on_any_reps_changed)
-	_update_complete_button_enabled()
-	
+		
 	# Create the confirmation dialog
 	_complete_dialog = ConfirmationDialog.new()
 	_complete_dialog.title = "Complete workout?"
@@ -60,22 +54,38 @@ func _ready() -> void:
 	
 	# Load workout config
 	ConfigStore.ensure_loaded()
+	_collect_exercise_panels()
+	_update_complete_button_enabled()
 	_apply_current_workout()
 
 
+func _collect_exercise_panels() -> void:
+	_exercise_panels.clear()
+	for child in exercises_container.get_children():
+		if child is ExercisePanel:
+			var panel: ExercisePanel = child
+			_exercise_panels.append(panel)
+			# Connect reps_changed -> _on_any_reps_changed once
+			if not panel.reps_changed.is_connected(_on_any_reps_changed):
+				panel.reps_changed.connect(_on_any_reps_changed)
+
+
 func _apply_current_workout() -> void:
-	# Program-only workout name comes from ConfigStore now
-	var workout_name: String = ConfigStore.get_current_workout_name()
-	workout_title_label.text = workout_name
+	workout_title_label.text = ConfigStore.get_current_workout_name()
 	
-	var exercise_ids: Array = ConfigStore.get_current_workout_exercise_ids()
-	if exercise_ids.size() < 3:
-		push_error("Current workout does not have 3 exercises")
-		return
+	var ids: Array = ConfigStore.get_current_workout_exercise_ids()
+	_bound_exercise_ids.clear()
 	
-	_setup_exercise_panel(exercise1, String(exercise_ids[0]))
-	_setup_exercise_panel(exercise2, String(exercise_ids[1]))
-	_setup_exercise_panel(exercise3, String(exercise_ids[2]))
+	var n : int = min(ids.size(), _exercise_panels.size())
+	for i in range(n):
+		var ex_id := String(ids[i])
+		_bound_exercise_ids.append(ex_id)
+		_setup_exercise_panel(_exercise_panels[i], ex_id)
+		_exercise_panels[i].visible = true
+	
+	# Hide unused panels (e.g., you have 4 panels but workout only has 3)
+	for i in range(n, _exercise_panels.size()):
+		_exercise_panels[i].visible = false
 
 
 func _setup_exercise_panel(panel: Node, exercise_id: String) -> void:
@@ -99,20 +109,12 @@ func _setup_exercise_panel(panel: Node, exercise_id: String) -> void:
 		panel.set_weight(current_weight)
 
 
-
 func _save_current_workout_results() -> void:
-	var exercise_ids: Array = ConfigStore.get_current_workout_exercise_ids()
-	if exercise_ids.size() < 3:
-		push_error("Workout has fewer than 3 exercises")
-		return
-	
-	var ex_id_1: String = String(exercise_ids[0])
-	var ex_id_2: String = String(exercise_ids[1])
-	var ex_id_3: String = String(exercise_ids[2])
-	
-	ConfigStore.set_last_set(ex_id_1, float(exercise1.get_weight()), int(exercise1.get_reps()))
-	ConfigStore.set_last_set(ex_id_2, float(exercise2.get_weight()), int(exercise2.get_reps()))
-	ConfigStore.set_last_set(ex_id_3, float(exercise3.get_weight()), int(exercise3.get_reps()))
+	var n : int = min(_bound_exercise_ids.size(), _exercise_panels.size())
+	for i in range(n):
+		var ex_id := _bound_exercise_ids[i]
+		var panel := _exercise_panels[i]
+		ConfigStore.set_last_set(ex_id, float(panel.get_weight()), int(panel.get_reps()))
 	
 	ConfigStore.advance_to_next_workout()
 	ConfigStore.save_progress()
@@ -123,14 +125,17 @@ func _on_timer_button_pressed() -> void:
 	_elapsed_ms = 0
 	_update_timer_label()
 
+
 	if not _timer_running:
 		_tick_timer.start()
 		_timer_running = true
 	# If already running, we just reset the elapsed time and keep counting up.
 
+
 func _on_tick_timer_timeout() -> void:
 	_elapsed_ms += 100
 	_update_timer_label()
+
 
 func _reset_timer_display() -> void:
 	_elapsed_ms = 0
@@ -142,7 +147,7 @@ func _update_timer_label() -> void:
 	var minutes: int = total_ms / 60000
 	var seconds: int = (total_ms / 1000) % 60
 	var hundredths: int = (total_ms / 10) % 100
-
+	
 	timer_value.text = "%02d:%02d.%02d" % [minutes, seconds, hundredths]
 
 
@@ -155,9 +160,11 @@ func _update_complete_button_enabled() -> void:
 
 
 func _all_exercises_have_reps() -> bool:
-	return exercise1.get_reps() > 0 \
-		and exercise2.get_reps() > 0 \
-		and exercise3.get_reps() > 0
+	var all_have_reps := true
+	for panel:ExercisePanel in _exercise_panels:
+		if panel.is_visible() and panel.get_reps() == 0:
+			all_have_reps = false
+	return all_have_reps
 
 
 func _on_complete_button_pressed() -> void:
@@ -170,10 +177,10 @@ func _on_cancel_button_pressed() -> void:
 
 func _on_complete_confirmed() -> void:
 	print("Complete Workout")
-	print("%s lb × %d reps" % [exercise1.get_weight(), exercise1.get_reps()])
-	print("%s lb × %d reps" % [exercise2.get_weight(), exercise2.get_reps()])
-	print("%s lb × %d reps" % [exercise3.get_weight(), exercise3.get_reps()])
-
+	for panel: ExercisePanel in _exercise_panels:
+		if panel.is_visible():
+			print("%s lb × %d reps" % [panel.get_weight(), panel.get_reps()])
+	
 	# Optional: stop the timer when workout is finished
 	if _timer_running:
 		_tick_timer.stop()

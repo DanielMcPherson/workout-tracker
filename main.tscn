@@ -106,6 +106,9 @@ layout_mode = 2
 [node name="ExercisePanel3" parent="Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox" instance=ExtResource("1_ig7tw")]
 layout_mode = 2
 
+[node name="ExercisePanel4" parent="Panel/MainMargin/MainVBox/ScrollContainer/ExerciseVBox" instance=ExtResource("1_ig7tw")]
+layout_mode = 2
+
 [node name="FooterPanel" type="PanelContainer" parent="Panel/MainMargin/MainVBox"]
 layout_mode = 2
 

@@ -1,4 +1,5 @@
 extends PanelContainer
+class_name ExercisePanel
 
 signal reps_changed
 
