@@ -31,26 +31,26 @@
   ],
 
   "exercises": {
-    "seated_db_curl": { "name": "Seated DB Curl" },
-    "chest_press_machine": { "name": "Chest Press Machine" },
-    "leg_press": { "name": "Leg Press" },
+      "seated_db_curl": { "name": "Seated DB Curl", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "chest_press_machine": { "name": "Chest Press Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "leg_press": { "name": "Leg Press", "min_reps": 6, "max_reps": 12, "drop_set": true },
 
-    "triceps_pushdown_bar": { "name": "Straight Bar Pushdown" },
-    "lat_pulldown": { "name": "Lat Pulldown" },
-    "reverse_pec_deck": { "name": "Reverse Pec Deck" },
+      "triceps_pushdown_bar": { "name": "Straight Bar Pushdown", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "lat_pulldown": { "name": "Lat Pulldown", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "reverse_pec_deck": { "name": "Reverse Pec Deck", "min_reps": 6, "max_reps": 12, "drop_set": true },
 
-    "shoulder_press_bar": { "name": "Shoulder Press" },
-    "chest_fly_machine": { "name": "Chest Fly Machine" },
-    "weighted_crunch_machine": { "name": "Weighted Crunch Machine" },
+      "shoulder_press_bar": { "name": "Shoulder Press", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "chest_fly_machine": { "name": "Chest Fly Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "weighted_crunch_machine": { "name": "Weighted Crunch Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
 
-    "hammer_curl_db": { "name": "DB Hammer Curl" },
-    "row_machine": { "name": "Row Machine" },
-    "leg_curl_machine": { "name": "Leg Curl Machine" },
+      "hammer_curl_db": { "name": "DB Hammer Curl", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "row_machine": { "name": "Row Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "leg_curl_machine": { "name": "Leg Curl Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
 
-    "oh_cable_extension": { "name": "Overhead Cable Extension" },
-    "db_lateral_raise": { "name": "DB Lateral Raise" },
-    "cable_woodchopper": { "name": "Cable Woodchoppers" },
+      "oh_cable_extension": { "name": "Overhead Cable Extension", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "db_lateral_raise": { "name": "DB Lateral Raise", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "cable_woodchopper": { "name": "Cable Woodchoppers", "min_reps": 6, "max_reps": 12, "drop_set": true },
 
-    "romanian_deadlift": { "name": "Romanian Deadlift" }
+      "romanian_deadlift": { "name": "Romanian Deadlift", "min_reps": 6, "max_reps": 12, "drop_set": true }
   }
 }
