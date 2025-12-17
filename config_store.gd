@@ -74,6 +74,41 @@ func get_exercise_name(exercise_id: String) -> String:
 	return String(ex.get("name", exercise_id))
 
 
+func get_max_reps(exercise_id: String, default_max:int = 12) -> int:
+	ensure_loaded()
+	var ex_map: Dictionary = _program.get("exercises", {})
+	if not ex_map.has(exercise_id):
+		return default_max
+	var ex: Dictionary = ex_map[exercise_id]
+	if not ex.has("max_reps"):
+		return default_max
+	return int(ex["max_reps"])
+
+
+func get_min_reps(exercise_id: String, default_min:int = 8) -> int:
+	ensure_loaded()
+	var ex_map: Dictionary = _program.get("exercises", {})
+	if not ex_map.has(exercise_id):
+		return default_min
+	var ex: Dictionary = ex_map[exercise_id]
+	if not ex.has("min_reps"):
+		return default_min
+	return int(ex["min_reps"])
+
+
+func has_drop_set(exercise_id: String) -> bool:
+	ensure_loaded()
+	var ex_map: Dictionary = _program.get("exercises", {})
+	if not ex_map.has(exercise_id):
+		return true
+	var ex: Dictionary = ex_map[exercise_id]
+	print("has_drop_set")
+	print(ex)
+	if not ex.has("drop_set"):
+		return true
+	return bool(ex["drop_set"])
+
+
 func get_last_weight(exercise_id: String, default_weight: float = 0.0) -> float:
 	ensure_loaded()
 	var ex_map: Dictionary = _progress.get("exercises", {})

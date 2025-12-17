@@ -88,25 +88,26 @@ func _apply_current_workout() -> void:
 		_exercise_panels[i].visible = false
 
 
-func _setup_exercise_panel(panel: Node, exercise_id: String) -> void:
+func _setup_exercise_panel(panel: ExercisePanel, exercise_id: String) -> void:
 	var exercise_name: String = ConfigStore.get_exercise_name(exercise_id)
 	var last_weight: float = ConfigStore.get_last_weight(exercise_id, 0.0)
 	var last_reps: int = ConfigStore.get_last_reps(exercise_id, 0)
+	var max_reps := ConfigStore.get_max_reps(exercise_id)
+	var has_drop_set := ConfigStore.has_drop_set(exercise_id)
 	
 	# Set exercise name
-	if panel.has_method("set_exercise_name"):
-		panel.set_exercise_name(exercise_name)
+	panel.set_exercise_name(exercise_name + " x " + str(max_reps))
+	panel.set_has_drop_set(has_drop_set)
 	
 	# Show "Last: X lb × Y reps"
-	if panel.has_method("set_last"):
-		panel.set_last(last_weight, last_reps)
+	panel.set_last(last_weight, last_reps)
 	
 	# Pre-fill working weight with last_weight (and apply your >12 rule)
-	if panel.has_method("set_weight"):
-		var current_weight := last_weight
-		if last_reps > 12:
-			current_weight += 5.0
-		panel.set_weight(current_weight)
+	var current_weight := last_weight
+	if last_reps > ConfigStore.get_max_reps(exercise_id):
+		current_weight += 5.0
+		print("Increasing weight on " + exercise_name)
+	panel.set_weight(current_weight)
 
 
 func _save_current_workout_results() -> void:

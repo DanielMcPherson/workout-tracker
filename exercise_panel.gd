@@ -24,6 +24,7 @@ signal reps_changed
 @onready var reps_up_button: Button = $ContentMargin/VBoxContainer/GridContainer/RepsHBox/RepsUpButton
 @onready var reps_down_button: Button = $ContentMargin/VBoxContainer/GridContainer/RepsHBox/RepsDownButton
 
+var has_drop_set := true
 
 func _ready() -> void:
 	# Connect button signals
@@ -38,6 +39,10 @@ func _ready() -> void:
 
 func set_exercise_name(exercise_name: String) -> void:
 	title_label.text = exercise_name
+
+
+func set_has_drop_set(drop_set: bool) -> void:
+	has_drop_set = drop_set
 
 
 func set_last(weight: float, reps: int) -> void:
@@ -56,19 +61,26 @@ func get_weight() -> float:
 	var value := float(txt) if txt.is_valid_float() else 0.0
 	return clamp(value, min_weight, max_weight)
 
+
 func set_weight(value: float) -> void:
 	value = clamp(value, min_weight, max_weight)
 	# Format; keep as plain number, you can decide decimals:
 	weight_line_edit.text = str(value)
 	_update_drop_set(value)
 
+
 func _on_weight_down_pressed() -> void:
 	set_weight(get_weight() - weight_step)
+
 
 func _on_weight_up_pressed() -> void:
 	set_weight(get_weight() + weight_step)
 
+
 func _update_drop_set(weight: float) -> void:
+	if not has_drop_set:
+		drop_value_label.text = "None"
+		return
 	# Calculate raw drop-set weight
 	var drop := weight * drop_set_factor
 	# Round to nearest weight_step
@@ -84,6 +96,7 @@ func _update_drop_set(weight: float) -> void:
 		text = "%.1f" % drop
 	drop_value_label.text = text + " lb"
 
+
 # Reps functions
 func get_reps() -> int:
 	var txt := reps_line_edit.text.strip_edges()
@@ -92,13 +105,16 @@ func get_reps() -> int:
 	var value := int(txt) if txt.is_valid_int() else 0
 	return clamp(value, min_reps, max_reps)
 
+
 func set_reps(value: int) -> void:
 	value = clamp(value, min_reps, max_reps)
 	reps_line_edit.text = str(value)
 	emit_signal("reps_changed")
 
+
 func _on_reps_down_pressed() -> void:
 	set_reps(get_reps() - reps_step)
+
 
 func _on_reps_up_pressed() -> void:
 	set_reps(get_reps() + reps_step)
