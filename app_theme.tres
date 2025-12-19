@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://cd80csmhkm7bd"]
+[gd_resource type="Theme" load_steps=12 format=3 uid="uid://cd80csmhkm7bd"]
 
 [ext_resource type="FontFile" uid="uid://bpnwmxkgud76q" path="res://Inter_28pt-SemiBold.ttf" id="1_ybbnh"]
 
@@ -33,7 +33,28 @@ corner_radius_bottom_left = 10
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dvgrd"]
 bg_color = Color(0.09411765, 0.09411765, 0.09411765, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_weqts"]
+bg_color = Color(0.8509804, 0.46666667, 0.023529412, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ddpsf"]
+bg_color = Color(0.99733454, 0.64982015, 0.36490703, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8ekm"]
+bg_color = Color(0.99256986, 0.55593103, 0.09423614, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jo3bb"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dn17k"]
 
@@ -45,5 +66,8 @@ Button/styles/hover = SubResource("StyleBoxFlat_ybbnh")
 Button/styles/normal = SubResource("StyleBoxFlat_rrvbq")
 Button/styles/pressed = SubResource("StyleBoxFlat_0ep2o")
 Panel/styles/panel = SubResource("StyleBoxFlat_dvgrd")
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_weqts")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_ddpsf")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_a8ekm")
 VScrollBar/styles/scroll = SubResource("StyleBoxFlat_jo3bb")
 VScrollBar/styles/scroll_focus = SubResource("StyleBoxFlat_dn17k")
