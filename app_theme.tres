@@ -1,6 +1,13 @@
-[gd_resource type="Theme" load_steps=12 format=3 uid="uid://cd80csmhkm7bd"]
+[gd_resource type="Theme" load_steps=13 format=3 uid="uid://cd80csmhkm7bd"]
 
 [ext_resource type="FontFile" uid="uid://bpnwmxkgud76q" path="res://Inter_28pt-SemiBold.ttf" id="1_ybbnh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ifxu2"]
+content_margin_left = 40.0
+content_margin_top = 40.0
+content_margin_right = 40.0
+content_margin_bottom = 40.0
+bg_color = Color(0.37254903, 0.37254903, 0.37254903, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c84bn"]
 bg_color = Color(0.22745098, 0.22745098, 0.22745098, 1)
@@ -61,6 +68,7 @@ corner_radius_bottom_left = 6
 [resource]
 default_font = ExtResource("1_ybbnh")
 default_font_size = 48
+AcceptDialog/styles/panel = SubResource("StyleBoxFlat_ifxu2")
 Button/styles/disabled = SubResource("StyleBoxFlat_c84bn")
 Button/styles/hover = SubResource("StyleBoxFlat_ybbnh")
 Button/styles/normal = SubResource("StyleBoxFlat_rrvbq")
