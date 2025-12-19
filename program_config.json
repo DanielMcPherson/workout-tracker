@@ -6,17 +6,17 @@
     {
       "id": "A",
       "name": "Biceps / Chest / Legs",
-	"exercises": ["seated_db_curl", "chest_press_machine", "leg_press", "romanian_deadlift"]
+	"exercises": ["seated_db_curl", "chest_press_machine", "leg_press"]
     },
     {
       "id": "B",
-      "name": "Triceps / Back / Rear Delts",
-      "exercises": ["triceps_pushdown_bar", "lat_pulldown", "reverse_pec_deck"]
+      "name": "Triceps / Back / RDL",
+      "exercises": ["triceps_pushdown_bar", "lat_pulldown", "db_rdl", "calf_machine"]
     },
     {
       "id": "C",
       "name": "Shoulders / Chest / Abs",
-      "exercises": ["shoulder_press_bar", "chest_fly_machine", "weighted_crunch_machine"]
+      "exercises": ["shoulder_press_bar", "db_lateral_raise", "chest_fly_machine", "weighted_crunch_machine"]
     },
     {
       "id": "D",
@@ -26,31 +26,33 @@
     {
       "id": "E",
       "name": "Triceps / Shoulders / Abs",
-      "exercises": ["oh_cable_extension", "db_lateral_raise", "cable_woodchopper"]
+      "exercises": ["oh_cable_extension", "reverse_pec_deck", "db_lateral_raise_light", "cable_woodchopper"]
     }
   ],
 
   "exercises": {
       "seated_db_curl": { "name": "Seated DB Curl", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "chest_press_machine": { "name": "Chest Press Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "leg_press": { "name": "Leg Press", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "chest_press_machine": { "name": "Chest Press Machine", "min_reps": 6, "max_reps": 10, "drop_set": true },
+      "leg_press": { "name": "Leg Press", "min_reps": 8, "max_reps": 12, "drop_set": false },
+      "calf_machine": { "name": "Calf Machine", "min_reps": 12, "max_reps": 20, "drop_set": true},
 
-      "triceps_pushdown_bar": { "name": "Straight Bar Pushdown", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "lat_pulldown": { "name": "Lat Pulldown", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "reverse_pec_deck": { "name": "Reverse Pec Deck", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "triceps_pushdown_bar": { "name": "Straight Bar Pushdown", "min_reps": 8, "max_reps": 12, "drop_set": true },
+      "lat_pulldown": { "name": "Lat Pulldown", "min_reps": 8, "max_reps": 12, "drop_set": true },
+      "reverse_pec_deck": { "name": "Reverse Pec Deck", "min_reps": 12, "max_reps": 20, "drop_set": true },
 
-      "shoulder_press_bar": { "name": "Shoulder Press", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "chest_fly_machine": { "name": "Chest Fly Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "weighted_crunch_machine": { "name": "Weighted Crunch Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "shoulder_press_bar": { "name": "Shoulder Press", "min_reps": 6, "max_reps": 10, "drop_set": false },
+      "chest_fly_machine": { "name": "Chest Fly Machine", "min_reps": 10, "max_reps": 15, "drop_set": true },
+      "weighted_crunch_machine": { "name": "Weighted Crunch Machine", "min_reps": 10, "max_reps": 15, "drop_set": true },
 
       "hammer_curl_db": { "name": "DB Hammer Curl", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "row_machine": { "name": "Row Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "leg_curl_machine": { "name": "Leg Curl Machine", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "row_machine": { "name": "Row Machine", "min_reps": 6, "max_reps": 10, "drop_set": true },
+      "leg_curl_machine": { "name": "Leg Curl Machine", "min_reps": 10, "max_reps": 15, "drop_set": true },
 
-      "oh_cable_extension": { "name": "Overhead Cable Extension", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "db_lateral_raise": { "name": "DB Lateral Raise", "min_reps": 6, "max_reps": 12, "drop_set": true },
-      "cable_woodchopper": { "name": "Cable Woodchoppers", "min_reps": 6, "max_reps": 12, "drop_set": true },
+      "oh_cable_extension": { "name": "Overhead Cable Extension", "min_reps": 10, "max_reps": 15, "drop_set": true },
+      "db_lateral_raise": { "name": "DB Lateral Raise", "min_reps": 10, "max_reps": 15, "drop_set": true },
+      "db_lateral_raise_light": { "name": "DB Lateral Raise", "min_reps": 15, "max_reps": 20, "drop_set": true },
+      "cable_woodchopper": { "name": "Cable Woodchoppers", "min_reps": 12, "max_reps": 20, "drop_set": true },
 
-      "romanian_deadlift": { "name": "Romanian Deadlift", "min_reps": 6, "max_reps": 12, "drop_set": true }
+      "db_rdl": { "name": "DB Romanian Deadlift", "min_reps": 6, "max_reps": 10, "drop_set": false }
   }
 }
