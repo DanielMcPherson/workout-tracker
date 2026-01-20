@@ -6,22 +6,22 @@
     {
       "id": "A",
       "name": "Biceps / Chest / Legs",
-	"exercises": ["seated_db_curl", "chest_press_machine", "leg_press"]
+	"exercises": ["preacher_curl_machine", "incline_smith_press", "smith_squat"]
     },
     {
       "id": "B",
       "name": "Triceps / Back / RDL",
-      "exercises": ["triceps_pushdown_bar", "lat_pulldown", "db_rdl", "calf_machine"]
+      "exercises": ["weighted_dips", "close_grip_pulldowns", "db_rdl", "calf_machine"]
     },
     {
       "id": "C",
       "name": "Shoulders / Chest / Abs",
-      "exercises": ["shoulder_press_bar", "db_lateral_raise", "chest_fly_machine", "weighted_crunch_machine"]
+      "exercises": ["smith_shoulder_press", "db_lateral_raise", "chest_fly_machine", "weighted_crunch_machine"]
     },
     {
       "id": "D",
       "name": "Biceps / Back / Legs",
-      "exercises": ["hammer_curl_db", "row_machine", "leg_curl_machine"]
+      "exercises": ["hammer_curl_db", "db_row", "leg_curl_machine"]
     },
     {
       "id": "E",
@@ -31,10 +31,16 @@
   ],
 
   "exercises": {
+      "preacher_curl_machine" : { "name": "Machine Preacher Curl", "min_reps": 8, "max_reps": 12, "drop_set": true },
+      "weighted_dips" : { "name": "Dips", "min_reps": 6, "max_reps": 10, "drop_set": true },
+      "close_grip_pulldowns" : { "name": "Close Grip Pulldowns", "min_reps": 8, "max_reps": 12, "drop_set": true },
       "seated_db_curl": { "name": "Seated DB Curl", "min_reps": 6, "max_reps": 12, "drop_set": true },
       "chest_press_machine": { "name": "Chest Press Machine", "min_reps": 6, "max_reps": 10, "drop_set": true },
+      "incline_smith_press": { "name": "Incline Smith Chest Press", "min_reps": 6, "max_reps": 10, "drop_set": true },
       "leg_press": { "name": "Leg Press", "min_reps": 8, "max_reps": 12, "drop_set": false },
+      "smith_squat": { "name": "Smith Machine Squat", "min_reps": 6, "max_reps": 12, "drop_set": false },
       "calf_machine": { "name": "Calf Machine", "min_reps": 12, "max_reps": 20, "drop_set": true},
+      "smith_shoulder_press": { "name": "Smith Shoulder Press", "min_reps": 6, "max_reps": 10, "drop_set": false },
 
       "triceps_pushdown_bar": { "name": "Straight Bar Pushdown", "min_reps": 8, "max_reps": 12, "drop_set": true },
       "lat_pulldown": { "name": "Lat Pulldown", "min_reps": 8, "max_reps": 12, "drop_set": true },
@@ -52,6 +58,7 @@
       "db_lateral_raise": { "name": "DB Lateral Raise", "min_reps": 10, "max_reps": 15, "drop_set": true },
       "db_lateral_raise_light": { "name": "DB Lateral Raise", "min_reps": 15, "max_reps": 20, "drop_set": true },
       "cable_woodchopper": { "name": "Cable Woodchoppers", "min_reps": 12, "max_reps": 20, "drop_set": true },
+      "db_row": { "name": "DB Single Arm Row", "min_reps": 6, "max_reps": 10, "drop_set":true },
 
       "db_rdl": { "name": "DB Romanian Deadlift", "min_reps": 6, "max_reps": 10, "drop_set": false }
   }
