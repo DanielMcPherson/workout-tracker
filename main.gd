@@ -112,11 +112,31 @@ func _setup_exercise_panel(panel: ExercisePanel, exercise_id: String) -> void:
 
 func _save_current_workout_results() -> void:
 	var n : int = min(_bound_exercise_ids.size(), _exercise_panels.size())
+
+	# Collect exercise data for history logging
+	var exercise_data: Array[Dictionary] = []
+
 	for i in range(n):
 		var ex_id := _bound_exercise_ids[i]
 		var panel := _exercise_panels[i]
-		ConfigStore.set_last_set(ex_id, float(panel.get_weight()), int(panel.get_reps()))
-	
+		var weight := float(panel.get_weight())
+		var reps := int(panel.get_reps())
+
+		# Save to progress (last_weight/last_reps)
+		ConfigStore.set_last_set(ex_id, weight, reps)
+
+		# Collect for history log
+		var ex_entry := {
+			"exercise_id": ex_id,
+			"name": ConfigStore.get_exercise_name(ex_id),
+			"weight": weight,
+			"reps": reps
+		}
+		exercise_data.append(ex_entry)
+
+	# Log the completed workout to history
+	ConfigStore.log_completed_workout(exercise_data)
+
 	ConfigStore.advance_to_next_workout()
 	ConfigStore.save_progress()
 

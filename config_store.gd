@@ -6,17 +6,22 @@ const PROGRAM_PATH: String = "res://program_config.json"
 # Progress file (state) lives in user storage and is never overwritten.
 const PROGRESS_PATH: String = "user://progress.json"
 
+# History file (workout logs) lives in user storage and grows over time.
+const HISTORY_PATH: String = "user://workout_history.json"
+
 # Legacy combined file (old approach)
 const LEGACY_COMBINED_PATH: String = "user://program_config.json"
 const LEGACY_BACKUP_PATH: String = "user://program_config.json.bak"
 
 var _program: Dictionary = {}
 var _progress: Dictionary = {}
+var _history: Dictionary = {}
 
 
 func _ready() -> void:
 	_load_program()
 	_load_or_create_progress()
+	_load_or_create_history()
 
 
 func ensure_loaded() -> void:
@@ -25,6 +30,8 @@ func ensure_loaded() -> void:
 		_load_program()
 	if _progress.is_empty():
 		_load_or_create_progress()
+	if _history.is_empty():
+		_load_or_create_history()
 
 # --------------------------------------------------------------------
 # Public API for workout_menu.gd
@@ -162,6 +169,34 @@ func save_progress() -> void:
 	ensure_loaded()
 	_save_json(PROGRESS_PATH, _progress)
 
+
+func log_completed_workout(exercise_data: Array[Dictionary]) -> void:
+	"""
+	Logs a completed workout to history.
+	exercise_data should be an array of dictionaries with:
+	  { "exercise_id": String, "name": String, "weight": float, "reps": int }
+	"""
+	ensure_loaded()
+
+	var workout := get_current_workout()
+	var workout_id: String = String(workout.get("id", ""))
+	var workout_name: String = String(workout.get("name", ""))
+
+	var timestamp := Time.get_datetime_string_from_system()
+
+	var workout_entry := {
+		"timestamp": timestamp,
+		"workout_id": workout_id,
+		"workout_name": workout_name,
+		"exercises": exercise_data
+	}
+
+	var workouts: Array = _history.get("workouts", [])
+	workouts.append(workout_entry)
+	_history["workouts"] = workouts
+
+	_save_json(HISTORY_PATH, _history)
+
 # --------------------------------------------------------------------
 # Loading / migration
 # --------------------------------------------------------------------
@@ -203,6 +238,34 @@ func _load_or_create_progress() -> void:
 	}
 	_sanitize_progress()
 	_save_json(PROGRESS_PATH, _progress)
+
+
+func _load_or_create_history() -> void:
+	if FileAccess.file_exists(HISTORY_PATH):
+		var data = _load_json(HISTORY_PATH)
+		if data != null and typeof(data) == TYPE_DICTIONARY:
+			_history = data
+			_sanitize_history()
+			return
+		push_error("History file exists but is invalid; recreating: %s" % HISTORY_PATH)
+
+	# Fresh history
+	_history = {
+		"schema_version": 1,
+		"workouts": []
+	}
+	_sanitize_history()
+	_save_json(HISTORY_PATH, _history)
+
+
+func _sanitize_history() -> void:
+	if typeof(_history) != TYPE_DICTIONARY:
+		_history = {}
+
+	if not _history.has("schema_version"):
+		_history["schema_version"] = 1
+	if not _history.has("workouts") or typeof(_history["workouts"]) != TYPE_ARRAY:
+		_history["workouts"] = []
 
 
 func _migrate_from_legacy_combined() -> bool:
