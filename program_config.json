@@ -6,7 +6,7 @@
     {
       "id": "A",
       "name": "Biceps / Chest / Legs",
-	"exercises": ["preacher_curl_machine", "incline_smith_press", "smith_squat"]
+	"exercises": ["preacher_curl_machine", "incline_smith_press", "leg_press"]
     },
     {
       "id": "B",
@@ -21,7 +21,7 @@
     {
       "id": "D",
       "name": "Biceps / Back / Legs",
-      "exercises": ["hammer_curl_db", "db_row", "leg_curl_machine"]
+      "exercises": ["hammer_curl_db", "row_machine", "leg_curl_machine"]
     },
     {
       "id": "E",
