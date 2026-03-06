@@ -1,17 +1,12 @@
 extends Node
 
-# Program file (definition) lives in the repo and ships with the app.
-const PROGRAM_PATH: String = "res://program_config.json"
+# Bundled program config — seed source on Android, primary source on desktop
+const PROGRAM_PATH_RES: String = "res://program_config.json"
 
-# Progress file (state) lives in user storage and is never overwritten.
-const PROGRESS_PATH: String = "user://progress.json"
-
-# History file (workout logs) lives in user storage and grows over time.
-const HISTORY_PATH: String = "user://workout_history.json"
-
-# Legacy combined file (old approach)
-const LEGACY_COMBINED_PATH: String = "user://program_config.json"
-const LEGACY_BACKUP_PATH: String = "user://program_config.json.bak"
+# All paths set at runtime based on platform
+var PROGRAM_PATH: String = ""
+var PROGRESS_PATH: String = ""
+var HISTORY_PATH: String = ""
 
 var _program: Dictionary = {}
 var _progress: Dictionary = {}
@@ -19,13 +14,46 @@ var _history: Dictionary = {}
 
 
 func _ready() -> void:
+	_init_data_paths()
+	_seed_program_config()
 	_load_program()
 	_load_or_create_progress()
 	_load_or_create_history()
 
 
+func _init_data_paths() -> void:
+	if OS.get_name() == "Android":
+		var docs := OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS)
+		var data_dir := (docs if not docs.is_empty() else "/sdcard/Documents") + "/WorkoutTracker"
+		var err := DirAccess.make_dir_recursive_absolute(data_dir)
+		if err == OK or DirAccess.dir_exists_absolute(data_dir):
+			PROGRAM_PATH = data_dir + "/program_config.json"
+			PROGRESS_PATH = data_dir + "/progress.json"
+			HISTORY_PATH = data_dir + "/workout_history.json"
+			return
+		push_error("Cannot create external storage dir, falling back to user://")
+	PROGRAM_PATH = PROGRAM_PATH_RES
+	PROGRESS_PATH = "user://progress.json"
+	HISTORY_PATH = "user://workout_history.json"
+
+
+func _seed_program_config() -> void:
+	# On Android: copy bundled program_config.json to external storage on first launch
+	if PROGRAM_PATH == PROGRAM_PATH_RES:
+		return
+	if FileAccess.file_exists(PROGRAM_PATH):
+		return
+	var data = _load_json(PROGRAM_PATH_RES)
+	if data != null:
+		_save_json(PROGRAM_PATH, data)
+	else:
+		push_error("Failed to seed program_config.json from res://")
+
+
 func ensure_loaded() -> void:
-	# Safe to call from any scene.
+	if PROGRESS_PATH.is_empty():
+		_init_data_paths()
+		_seed_program_config()
 	if _program.is_empty():
 		_load_program()
 	if _progress.is_empty():
@@ -51,7 +79,7 @@ func get_current_workout_name() -> String:
 	var workouts: Array = _program.get("workouts", [])
 	if workouts.is_empty():
 		return "No workouts configured"
-	
+
 	var workout: Dictionary = workouts[get_current_workout_index()]
 	return String(workout.get("name", "Workout"))
 
@@ -142,12 +170,12 @@ func set_last_set(exercise_id: String, weight: float, reps: int) -> void:
 	ensure_loaded()
 	if not _progress.has("exercises") or typeof(_progress["exercises"]) != TYPE_DICTIONARY:
 		_progress["exercises"] = {}
-	
+
 	var ex_map: Dictionary = _progress["exercises"]
 	var ex: Dictionary = {}
 	if ex_map.has(exercise_id) and typeof(ex_map[exercise_id]) == TYPE_DICTIONARY:
 		ex = ex_map[exercise_id]
-	
+
 	ex["last_weight"] = float(weight)
 	ex["last_reps"] = int(reps)
 	ex_map[exercise_id] = ex
@@ -160,7 +188,7 @@ func advance_to_next_workout() -> void:
 	if workouts.is_empty():
 		_progress["current_workout_index"] = 0
 		return
-	
+
 	var idx: int = get_current_workout_index()
 	_progress["current_workout_index"] = (idx + 1) % workouts.size()
 
@@ -171,11 +199,6 @@ func save_progress() -> void:
 
 
 func log_completed_workout(exercise_data: Array[Dictionary]) -> void:
-	"""
-	Logs a completed workout to history.
-	exercise_data should be an array of dictionaries with:
-	  { "exercise_id": String, "name": String, "weight": float, "reps": int }
-	"""
 	ensure_loaded()
 
 	var workout := get_current_workout()
@@ -198,7 +221,7 @@ func log_completed_workout(exercise_data: Array[Dictionary]) -> void:
 	_save_json(HISTORY_PATH, _history)
 
 # --------------------------------------------------------------------
-# Loading / migration
+# Loading
 # --------------------------------------------------------------------
 
 func _load_program() -> void:
@@ -211,7 +234,6 @@ func _load_program() -> void:
 
 
 func _load_or_create_progress() -> void:
-	# Preferred: new progress file exists
 	if FileAccess.file_exists(PROGRESS_PATH):
 		var data = _load_json(PROGRESS_PATH)
 		if data != null and typeof(data) == TYPE_DICTIONARY:
@@ -219,18 +241,7 @@ func _load_or_create_progress() -> void:
 			_sanitize_progress()
 			return
 		push_error("Progress file exists but is invalid; recreating: %s" % PROGRESS_PATH)
-	
-	# No progress file yet: attempt migration from legacy combined file
-	if FileAccess.file_exists(LEGACY_COMBINED_PATH):
-		var migrated := _migrate_from_legacy_combined()
-		if migrated:
-			_sanitize_progress()
-			_save_json(PROGRESS_PATH, _progress)
-			_archive_legacy_file()
-			return
-		push_error("Legacy config exists but migration failed; starting fresh progress.")
-	
-	# Fresh progress
+
 	_progress = {
 		"schema_version": 1,
 		"current_workout_index": 0,
@@ -249,7 +260,6 @@ func _load_or_create_history() -> void:
 			return
 		push_error("History file exists but is invalid; recreating: %s" % HISTORY_PATH)
 
-	# Fresh history
 	_history = {
 		"schema_version": 1,
 		"workouts": []
@@ -261,75 +271,22 @@ func _load_or_create_history() -> void:
 func _sanitize_history() -> void:
 	if typeof(_history) != TYPE_DICTIONARY:
 		_history = {}
-
 	if not _history.has("schema_version"):
 		_history["schema_version"] = 1
 	if not _history.has("workouts") or typeof(_history["workouts"]) != TYPE_ARRAY:
 		_history["workouts"] = []
 
 
-func _migrate_from_legacy_combined() -> bool:
-	var legacy = _load_json(LEGACY_COMBINED_PATH)
-	if legacy == null or typeof(legacy) != TYPE_DICTIONARY:
-		return false
-	
-	# old structure: { "meta": { "current_workout_index": ... }, "exercises": { id: { last_weight, last_reps, ... } }, ... }
-	var meta: Dictionary = legacy.get("meta", {})
-	var idx: int = int(meta.get("current_workout_index", 0))
-	
-	var out_exercises: Dictionary = {}
-	var legacy_ex: Dictionary = legacy.get("exercises", {})
-	if typeof(legacy_ex) == TYPE_DICTIONARY:
-		for ex_id in legacy_ex.keys():
-			if typeof(ex_id) != TYPE_STRING and typeof(ex_id) != TYPE_STRING_NAME:
-				continue
-			var ex_data = legacy_ex[ex_id]
-			if typeof(ex_data) != TYPE_DICTIONARY:
-				continue
-			var entry: Dictionary = {}
-			if ex_data.has("last_weight"):
-				entry["last_weight"] = float(ex_data["last_weight"])
-			if ex_data.has("last_reps"):
-				entry["last_reps"] = int(ex_data["last_reps"])
-
-			# Only keep entries that actually have progress
-			if not entry.is_empty():
-				out_exercises[String(ex_id)] = entry
-	
-	_progress = {
-		"schema_version": 1,
-		"current_workout_index": idx,
-		"exercises": out_exercises
-	}
-	return true
-
-func _archive_legacy_file() -> void:
-	# Rename legacy combined file to .bak, overwriting any existing .bak
-	if not FileAccess.file_exists(LEGACY_COMBINED_PATH):
-		return
-	
-	# Remove existing backup to allow rename.
-	if FileAccess.file_exists(LEGACY_BACKUP_PATH):
-		DirAccess.remove_absolute(LEGACY_BACKUP_PATH)
-	
-	var err := DirAccess.rename_absolute(LEGACY_COMBINED_PATH, LEGACY_BACKUP_PATH)
-	if err != OK:
-		push_error("Failed to archive legacy file (%s -> %s). Error: %d" % [LEGACY_COMBINED_PATH, LEGACY_BACKUP_PATH, err])
-
-
 func _sanitize_progress() -> void:
-	# Ensure required keys exist and are correct types
 	if typeof(_progress) != TYPE_DICTIONARY:
 		_progress = {}
-	
 	if not _progress.has("schema_version"):
 		_progress["schema_version"] = 1
 	if not _progress.has("current_workout_index"):
 		_progress["current_workout_index"] = 0
 	if not _progress.has("exercises") or typeof(_progress["exercises"]) != TYPE_DICTIONARY:
 		_progress["exercises"] = {}
-	
-	# Clamp workout index into current program range
+
 	var workouts: Array = _program.get("workouts", [])
 	if workouts.is_empty():
 		_progress["current_workout_index"] = 0

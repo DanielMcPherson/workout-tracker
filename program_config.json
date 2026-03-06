@@ -6,12 +6,12 @@
     {
       "id": "A",
       "name": "Biceps / Chest / Legs",
-	"exercises": ["preacher_curl_machine", "incline_smith_press", "leg_press"]
+	"exercises": ["seated_db_curl", "incline_smith_press", "leg_press"]
     },
     {
       "id": "B",
       "name": "Triceps / Back / RDL",
-      "exercises": ["weighted_dips", "close_grip_pulldowns", "db_rdl", "calf_machine"]
+      "exercises": ["weighted_dips", "wide_grip_pulldowns", "db_rdl", "calf_machine"]
     },
     {
       "id": "C",
@@ -34,6 +34,7 @@
       "preacher_curl_machine" : { "name": "Machine Preacher Curl", "min_reps": 8, "max_reps": 12, "drop_set": true },
       "weighted_dips" : { "name": "Dips", "min_reps": 6, "max_reps": 10, "drop_set": true },
       "close_grip_pulldowns" : { "name": "Close Grip Pulldowns", "min_reps": 8, "max_reps": 12, "drop_set": true },
+      "wide_grip_pulldowns" : { "name": "Wide Grip Pulldowns", "min_reps": 8, "max_reps": 12, "drop_set": true },
       "seated_db_curl": { "name": "Seated DB Curl", "min_reps": 6, "max_reps": 12, "drop_set": true },
       "chest_press_machine": { "name": "Chest Press Machine", "min_reps": 6, "max_reps": 10, "drop_set": true },
       "incline_smith_press": { "name": "Incline Smith Chest Press", "min_reps": 6, "max_reps": 10, "drop_set": true },

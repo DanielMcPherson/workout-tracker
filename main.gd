@@ -20,7 +20,8 @@ var _cancel_dialog: ConfirmationDialog
 
 
 func _ready() -> void:
-		# Create and configure the internal tick timer
+	OS.request_permissions()
+	# Create and configure the internal tick timer
 	_tick_timer = Timer.new()
 	_tick_timer.wait_time = 0.1   # update every 100 ms
 	_tick_timer.one_shot = false
